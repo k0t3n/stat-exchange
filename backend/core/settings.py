@@ -140,6 +140,8 @@ LANGUAGE_CODE = 'ru_RU'
 
 TIME_ZONE = 'Europe/Moscow'
 
+UPLOAD_DIR = 'uploads/'
+
 USE_I18N = True
 
 USE_L10N = True
