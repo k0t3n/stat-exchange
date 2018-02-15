@@ -20,10 +20,8 @@ export function loginUserSuccess(data) {
     localStorage.setItem('token', data.token);
     return {
         type: LOGIN_USER_SUCCESS,
-        payload: {
-            token: data.token,
-            user: data.user
-        }
+        token: data.token,
+        user: data.user
     }
 }
 
@@ -31,10 +29,8 @@ export function loginUserFailure(err) {
     localStorage.removeItem('token');
     return {
         type: LOGIN_USER_FAILURE,
-        payload: {
-            status: err.response.status,
-            statusText: err.response.statusText
-        }
+        status: err.response.status,
+        statusText: err.response.statusText
     }
 }
 
@@ -87,9 +83,7 @@ export function fetchDataRequest() {
 export function receiveData(data) {
     return {
         type: RECEIVE_DATA,
-        payload: {
-            data
-        }
+        data
     }
 }
 
