@@ -80,7 +80,7 @@ class StatsUploadEvent(models.Model):
         verbose_name='ID задачи',
     )
     uploaded_at = models.DateTimeField(
-        auto_created=True,
+        auto_now_add=True,
         verbose_name='время загрузки'
     )
     uploaded_records = models.PositiveIntegerField(
@@ -92,4 +92,10 @@ class StatsUploadEvent(models.Model):
         choices=STATUSES,
         default='in_progress',
         verbose_name='статус'
+    )
+
+    filename = models.FilePathField(
+        recursive=True,
+        path='uploads/',
+        verbose_name='путь до файла'
     )
