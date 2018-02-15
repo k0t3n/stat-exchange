@@ -11,12 +11,29 @@ import createHistory from 'history/createBrowserHistory';
 import { createStore, applyMiddleware } from "redux";
 import ReduxThunk from 'redux-thunk';
 import reducer from './reducers';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const initialState = {
+    token: null,
+    user: null,
+    isAuthenticated: false,
+    isAuthenticating: false,
+    statusText: null
+};
 
 const history = createHistory();
+
+const middleware = [
+    ReduxThunk,
+    routerMiddleware(history)
+];
+
 const store = createStore(
     reducer,
-    applyMiddleware(routerMiddleware(history), ReduxThunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    initialState,
+    composeWithDevTools(
+        applyMiddleware(...middleware)
+    )
 );
 
 let token = localStorage.getItem('token');

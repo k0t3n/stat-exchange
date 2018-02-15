@@ -34,18 +34,18 @@ export function loginUserFailure(err) {
     }
 }
 
-export function logout() {
+function logout() {
     localStorage.removeItem('token');
     return {
         type: LOGOUT_USER
     }
 }
 
-export function loginUser(username, password, redirect='/') {
-    return function (dispatch) {
+export function loginUser(username = '', password = '', redirect='/') {
+    return function(dispatch) {
         dispatch(loginUserRequest());
         console.log('>>>> login request');
-        fetch(`${ROOT_URL}/api/accounts/login/`, {
+        return fetch(`${ROOT_URL}/api/accounts/login/`, {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
