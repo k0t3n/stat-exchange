@@ -2,3 +2,5 @@
 venv
 backend/db.sqlite3
 .DS_Store
+
+backend/core/local_settings.py

@@ -32,7 +32,7 @@ class Stats(models.Model):
         verbose_name='тип'
     )
 
-    currency = models.ForeignKey(
+    currency_pair = models.ForeignKey(
         CurrencyPair,
         on_delete=models.CASCADE
     )

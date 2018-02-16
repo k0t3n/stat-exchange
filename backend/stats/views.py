@@ -85,7 +85,7 @@ class StatsView(APIView):
     def post(self, request, format=None):
         received_data = request.data
         stats_objects = Stats.objects.filter(
-            currency=CurrencyPair.objects.get(
+            currency_pair=CurrencyPair.objects.get(
                 first_currency=received_data['first_currency'],
                 last_currency=received_data['last_currency'],
             )

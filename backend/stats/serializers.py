@@ -1,5 +1,6 @@
-from .models import StatsUploadEvent, CurrencyPair, Stats
 from rest_framework import serializers
+from .fields import CurrencyPairField
+from .models import StatsUploadEvent, CurrencyPair, Stats
 
 
 class StatsUploadEventSerializer(serializers.ModelSerializer):
@@ -19,7 +20,7 @@ class StatsSerializer(serializers.Serializer):
         max_length=5,
     )
 
-    currency = serializers.StringRelatedField()
+    currency_pair = CurrencyPairField()
 
     datetime = serializers.DateTimeField()
 
@@ -48,11 +49,3 @@ class StatsSerializer(serializers.Serializer):
     quote_total_less_fee = serializers.DecimalField(
         max_digits=17, decimal_places=8,  # <1 milliard
     )
-
-    # class Meta:
-    #     model = Stats
-    #     fields = (
-    #         'type', 'currency', 'datetime', 'price',
-    #         'amount', 'total', 'fee', 'order',
-    #         'base_total_less_fee', 'quote_total_less_fee'
-    #     )
