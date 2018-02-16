@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
+import { logoutUser } from "../actions/auth";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { privateComponent } from "../HOCs/privateComponent";
 
-export default class SignOut extends Component {
+class SignOut extends Component {
+    componentWillMount() {
+        this.props.logoutUser();
+    }
+
     render() {
         return (
             <div className="SignOut">
@@ -10,4 +18,10 @@ export default class SignOut extends Component {
     }
 }
 
-//todo: signout
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logoutUser: bindActionCreators(logoutUser, dispatch)
+    }
+};
+
+export default connect(undefined, mapDispatchToProps)(privateComponent(SignOut));
