@@ -1,13 +1,6 @@
 import os
 import datetime
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-SECRET_KEY = '3_%5g+6%wm4xb94n)q!kk-3wwcn(dh)2-zc(6&w-sq0j(uo$-9'
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+from .local_settings import *
 
 INSTALLED_APPS = [
     # Django core apps
@@ -114,12 +107,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -148,7 +135,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
 
 # Redis/Celery
 REDIS_HOST = 'localhost'
