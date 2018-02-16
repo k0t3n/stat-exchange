@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
-
+import { Switch, Route } from 'react-router-dom';
+import Header from '../components/Header';
 import App from './App';
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import SignOut from "./SignOut";
+import SignIn from './SignIn';
+// import SignUp from './SignUp';
+import SignOut from './SignOut';
 
-export default class Main extends Component {
+class Main extends Component {
     render() {
         return (
             <div>
-                <header>
-                    <Link to={"/logout"}>Выйти</Link>
-                </header>
+                <Header/>
                 <Switch>
                     <Route exact path={"/"} component={App} />
                     <Route path={"/auth"} component={SignIn} />
-                    <Route path={"/register"} component={SignUp} />
+                    {/*<Route path={"/register"} component={SignUp} />*/}
                     <Route path={"/logout"} component={SignOut} />
                 </Switch>
             </div>
         )
     }
 }
+
+export default Main;

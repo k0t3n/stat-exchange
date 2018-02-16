@@ -14,11 +14,13 @@ import reducer from './reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 const initialState = {
-    token: null,
-    user: null,
-    isAuthenticated: false,
-    isAuthenticating: false,
-    statusText: null
+    auth: {
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        isAuthenticating: false,
+        statusText: null
+    }
 };
 
 const history = createHistory();

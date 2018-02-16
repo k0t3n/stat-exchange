@@ -20,8 +20,8 @@ export function loginUserSuccess(data) {
     localStorage.setItem('token', data.token);
     return {
         type: LOGIN_USER_SUCCESS,
-        token: data.token,
-        user: data.user
+        token: '',//data.token,
+        user: ''//data.user
     }
 }
 
@@ -41,9 +41,13 @@ function logout() {
     }
 }
 
-export function loginUser(username = '', password = '', redirect='/') {
+export function loginUser(login, pass, redirect = '/') {
     return function(dispatch) {
         dispatch(loginUserRequest());
+        const data = {
+            username: login,
+            password: pass
+        };
         console.log('>>>> login request');
         return fetch(`${ROOT_URL}/api/accounts/login/`, {
             method: 'post',
@@ -51,7 +55,7 @@ export function loginUser(username = '', password = '', redirect='/') {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify(data)
         })
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
