@@ -12,6 +12,13 @@ class CurrencyPair(models.Model):
         verbose_name='вторая валюта'
     )
 
+    class Meta:
+        verbose_name = 'пара валют'
+        verbose_name_plural = 'пары валют'
+
+    def __str__(self):
+        return '{}/{}'.format(self.first_currency, self.last_currency)
+
 
 class Stats(models.Model):
     TYPES = (
@@ -68,6 +75,13 @@ class Stats(models.Model):
         verbose_name='сумма транзакции во 2 валюте с учетом комиссии'
     )
 
+    class Meta:
+        verbose_name = 'статистика'
+        verbose_name_plural = 'статистика'
+
+    def __str__(self):
+        return '{} {}/{}'.format(self.type.capitalize(), self.currency.first_currency, self.currency.last_currency)
+
 
 class StatsUploadEvent(models.Model):
     STATUSES = (
@@ -99,3 +113,10 @@ class StatsUploadEvent(models.Model):
         path='uploads/',
         verbose_name='путь до файла'
     )
+
+    class Meta:
+        verbose_name = 'загрузка статистики'
+        verbose_name_plural = 'загрузка статистики'
+
+    def __str__(self):
+        return 'Status: {}, uploaded: {}'.format(self.status, self.uploaded_records)
