@@ -1,6 +1,3 @@
-import os
-import csv
-
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView, Response
@@ -8,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from .utils import handle_uploaded_file
 from .tasks import start_parse
-from .models import StatsUploadEvent
-from .serializers import StatsUploadEventSerializer
+from .models import StatsUploadEvent, CurrencyPair
+from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer
 
 
 class StatsUploadView(APIView):
@@ -41,4 +38,25 @@ class StatsUploadEventView(generics.ListAPIView):
     # TODO: пагинация
     queryset = StatsUploadEvent.objects.all()[:10]
     serializer_class = StatsUploadEventSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+
+
+class CurrencyPairsView(generics.ListAPIView):
+    """
+    Вывод всех пар монет
+    """
+    queryset = CurrencyPair.objects.all()
+    serializer_class = CurrencyPairSerializer
+
+
+class AllCurrenciesView(APIView):
+    def get(self, request):
+        data = []
+        currency_pairs = CurrencyPair.objects.all()
+        for pair in currency_pairs:
+            data.append(pair.first_currency)
+            data.append(pair.last_currency)
+
+        data = set(data)
+
+        return Response(data)
