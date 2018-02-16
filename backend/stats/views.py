@@ -14,6 +14,7 @@ class StatsUploadView(APIView):
     Загрузка файла
     """
 
+    # permission_classes = IsAuthenticated
     parser_classes = (MultiPartParser,)
 
     def put(self, request, filename, format=None):
@@ -34,22 +35,29 @@ class StatsUploadEventView(generics.ListAPIView):
     """
     Вывод ивент-загрузок
     """
-
     # TODO: пагинация
+
+    # permission_classes = (IsAuthenticated,)
     queryset = StatsUploadEvent.objects.all()[:10]
     serializer_class = StatsUploadEventSerializer
-    # permission_classes = (IsAuthenticated,)
 
 
 class CurrencyPairsView(generics.ListAPIView):
     """
     Вывод всех пар монет
     """
+    # permission_classes = IsAuthenticated
     queryset = CurrencyPair.objects.all()
     serializer_class = CurrencyPairSerializer
 
 
 class AllCurrenciesView(APIView):
+    """
+    Вывод всех уникальных монеток
+    """
+
+    # permission_classes = IsAuthenticated
+
     def get(self, request):
         data = []
         currency_pairs = CurrencyPair.objects.all()
