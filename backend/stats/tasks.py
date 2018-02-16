@@ -14,10 +14,19 @@ class ParseStatsTask(Task):
     def on_success(self, retval, task_id, *args, **kwargs):
         task_celery = AsyncResult(task_id)
         result = task_celery.result
+
+        stats_task = StatsUploadEvent.objects.get(task_id=task_id)
+        stats_task.status = 'success'
+        stats_task.uploaded_records = int(result['uploaded_records'])
+        stats_task.save()
+
         return
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        task_celery = AsyncResult(task_id)
+        stats_task = StatsUploadEvent.objects.get(task_id=task_id)
+        stats_task.status = 'failed'
+        stats_task.save()
+
         return
 
 
@@ -35,12 +44,12 @@ def start_parse(filename):
                     currency=CurrencyPair.objects.get_or_create(
                         first_currency=item['Market'].split('/')[0],
                         last_currency=item['Market'].split('/')[1],
-                    )[0],
+                    )[0],  # because get_or_create() returns tuple
                     datetime=item['Date'],
                     price=float(item['Price']),
                     amount=float(item['Amount']),
                     total=float(item['Total']),
-                    fee=float(item['Fee'][:-1]),
+                    fee=float(item['Fee'][:-1]),  # remove %
                     order=int(item['Order Number']),
                     base_total_less_fee=float(item['Base Total Less Fee']),
                     quote_total_less_fee=float(item['Quote Total Less Fee']),
@@ -49,10 +58,8 @@ def start_parse(filename):
 
         Stats.objects.bulk_create(data)
 
-        # print(data)
-
     result = {
         'uploaded_records': len(data)
     }
 
-    return
+    return result
