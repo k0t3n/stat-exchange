@@ -1,12 +1,13 @@
 from rest_framework import generics
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
 from rest_framework.permissions import IsAuthenticated
 
 from .utils import handle_uploaded_file
 from .tasks import start_parse
-from .models import StatsUploadEvent, CurrencyPair
-from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer
+from .models import Stats, StatsUploadEvent, CurrencyPair
+from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, StatsSerializer
 
 
 class StatsUploadView(APIView):
@@ -68,3 +69,28 @@ class AllCurrenciesView(APIView):
         data = set(data)
 
         return Response(data)
+
+
+class StatsView(APIView):
+    """
+    Вывод статистики по заданным параметрам
+    """
+
+    # parser_classes = (JSONParser,)
+
+    renderer_classes = (JSONRenderer,)
+
+    # serializer_class = StatsSerializer
+
+    def post(self, request, format=None):
+        received_data = request.data
+        stats_objects = Stats.objects.filter(
+            currency=CurrencyPair.objects.get(
+                first_currency=received_data['first_currency'],
+                last_currency=received_data['last_currency'],
+            )
+        )
+
+        response = StatsSerializer(stats_objects, many=True).data
+
+        return Response(response)
