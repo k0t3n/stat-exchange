@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../styles/SignIn.css';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
 import { loginUser } from "../actions/auth";
 import LoginForm from "../components/LoginForm";
@@ -15,6 +16,12 @@ class SignIn extends Component {
 
         this.onChangeInput = this.onChangeInput.bind(this);
         this.validateForm = this.validateForm.bind(this);
+    }
+
+    componentWillMount() {
+        if (this.props.isAuthenticated) {
+            this.props.redirect("/");
+        }
     }
 
     validateForm() {
@@ -49,13 +56,15 @@ class SignIn extends Component {
 const mapStateToProps = (state) => {
     return {
         error: state.auth.error,
-        statusText: state.auth.statusText
+        statusText: state.auth.statusText,
+        isAuthenticated: state.auth.isAuthenticated
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginUser: bindActionCreators(loginUser, dispatch)
+        loginUser: bindActionCreators(loginUser, dispatch),
+        redirect: bindActionCreators(push, dispatch)
     }
 };
 

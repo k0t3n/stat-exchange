@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Form, Col, Modal, Alert } from 'react-bootstrap';
+import { Form, Modal, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Input from './Input';
+import ColButton from "./ColButton";
 
 const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser, error, statusText }) => {
     return (
@@ -43,22 +44,15 @@ const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser, er
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <Col
-                        lg={4}
-                        md={4}
-                        sm={4}
-                        lgOffset={4}
-                        mdOffset={4}
-                        smOffset={4}
-                    >
-                        <Button
-                            bsStyle="success"
-                            disabled={validateForm()}
-                            onClick={() => loginUser(login, password)}
-                            block
-                        >Войти
-                        </Button>
-                    </Col>
+                    <ColButton
+                        size={4}
+                        offset={4}
+                        disabled={validateForm()}
+                        onClick={() => loginUser(login, password)}
+                        bsStyle="success"
+                        block
+                    >Войти
+                    </ColButton>
                 </Modal.Footer>
             </Modal.Dialog>
         </div>
