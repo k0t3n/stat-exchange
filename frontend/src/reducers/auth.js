@@ -13,7 +13,8 @@ export default function authReducer(state = initialState, action) {
         case LOGIN_USER_REQUEST:
             return Object.assign({}, state, {
                 isAuthenticating: true,
-                statusText: null
+                statusText: null,
+                error: false
             });
 
         case LOGIN_USER_SUCCESS:
@@ -22,7 +23,8 @@ export default function authReducer(state = initialState, action) {
                 isAuthenticated: true,
                 token: action.token,
                 user: action.user,
-                statusText: 'Successful'
+                statusText: 'Successful',
+                error: false
             });
 
         case LOGIN_USER_FAILURE:
@@ -31,7 +33,8 @@ export default function authReducer(state = initialState, action) {
                 isAuthenticated: false,
                 token: null,
                 user: null,
-                statusText: `Authenticating Error: ${action.status} ${action.statusText}`
+                statusText: `Authenticating Error: ${action.status} ${action.statusText}`,
+                error: true
             });
 
         case LOGOUT_USER:
@@ -40,7 +43,8 @@ export default function authReducer(state = initialState, action) {
                 isAuthenticated: false,
                 token: null,
                 user: null,
-                statusText: 'Logged out'
+                statusText: 'Logged out',
+                error: false
             });
 
         default:

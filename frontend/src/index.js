@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
-import Main from './containers/Main';
+import Main from './components/Main';
 import registerServiceWorker from './registerServiceWorker';
 
 import { loginUserSuccess } from "./actions/auth";
@@ -19,7 +19,8 @@ const initialState = {
         user: null,
         isAuthenticated: false,
         isAuthenticating: false,
-        statusText: null
+        statusText: null,
+        error: false
     }
 };
 

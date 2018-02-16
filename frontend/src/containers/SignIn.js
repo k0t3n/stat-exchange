@@ -30,17 +30,28 @@ class SignIn extends Component {
 
     render() {
         const { login, password } = this.state;
+        const { loginUser, error, statusText } = this.props;
+
         return (
             <LoginForm
-                loginUser={this.props.loginUser}
+                loginUser={loginUser}
                 onChangeInput={this.onChangeInput}
                 validateForm={this.validateForm}
                 login={login}
                 password={password}
+                error={error}
+                statusText={statusText}
             />
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        error: state.auth.error,
+        statusText: state.auth.statusText
+    }
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -48,4 +59,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(undefined, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

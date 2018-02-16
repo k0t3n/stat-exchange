@@ -5,8 +5,8 @@ export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGOUT_USER = 'LOGIN_USER';
-export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
-export const RECEIVE_DATA = 'RECEIVE_DATA';
+// export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
+// export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 const ROOT_URL = '127.0.0.1:8000';
 
@@ -27,6 +27,7 @@ export function loginUserSuccess(data) {
 
 export function loginUserFailure(err) {
     localStorage.removeItem('token');
+    console.log(err);
     return {
         type: LOGIN_USER_FAILURE,
         status: err.response.status,
@@ -78,18 +79,18 @@ export function logoutUser() {
     }
 }
 
-export function fetchDataRequest() {
-    return {
-        type: FETCH_DATA_REQUEST
-    }
-}
-
-export function receiveData(data) {
-    return {
-        type: RECEIVE_DATA,
-        data
-    }
-}
+// export function fetchDataRequest() {
+//     return {
+//         type: FETCH_DATA_REQUEST
+//     }
+// }
+//
+// export function receiveData(data) {
+//     return {
+//         type: RECEIVE_DATA,
+//         data
+//     }
+// }
 
 // export function fetchData(token) {
 //     return function(dispatch) {

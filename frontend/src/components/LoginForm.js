@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, Form, Col, Modal } from 'react-bootstrap';
+import { Button, Form, Col, Modal, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Input from './Input';
 
-const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser }) => {
+const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser, error, statusText }) => {
     return (
         <div className="SignIn">
             <Modal.Dialog>
@@ -34,6 +34,13 @@ const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser }) 
                             offset={1}
                         />
                     </Form>
+                    {
+                        error && (
+                            <Alert bsStyle="danger">
+                                {statusText}
+                            </Alert>
+                        )
+                    }
                 </Modal.Body>
                 <Modal.Footer>
                     <Col
@@ -62,8 +69,10 @@ LoginForm.propTypes = {
     loginUser: PropTypes.func.isRequired,
     login: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
+    statusText: PropTypes.string,
     onChangeInput: PropTypes.func.isRequired,
-    validateForm: PropTypes.func.isRequired
+    validateForm: PropTypes.func.isRequired,
+    error: PropTypes.bool.isRequired,
 };
 
 export default LoginForm;
