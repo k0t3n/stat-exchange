@@ -50,7 +50,6 @@ const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser, er
                         disabled={validateForm()}
                         onClick={() => loginUser(login, password)}
                         bsStyle="success"
-                        block
                     >Войти
                     </ColButton>
                 </Modal.Footer>

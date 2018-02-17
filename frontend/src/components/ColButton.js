@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const ColButton = ({ children, size, offset, ...props }) => {
+const ColButton = ({ children, size = 1, offset = 0, ...props }) => {
     return (
         <Col
             lg={size}
@@ -13,6 +13,7 @@ const ColButton = ({ children, size, offset, ...props }) => {
             smOffset={offset}
         >
             <Button
+                block
                 {...props}
             >{children}
             </Button>
@@ -22,8 +23,8 @@ const ColButton = ({ children, size, offset, ...props }) => {
 
 Button.propTypes = {
     children: PropTypes.node.isRequired,
-    size: PropTypes.number.isRequired,
-    offset: PropTypes.number.isRequired
+    size: PropTypes.number,
+    offset: PropTypes.number
 };
 
 export default ColButton;

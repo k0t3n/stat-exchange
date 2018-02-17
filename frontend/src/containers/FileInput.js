@@ -33,7 +33,6 @@ class FileInput extends Component {
                     onClick={() => {}}
                     size={4}
                     offset={4}
-                    block
                 >
                     Загрузить файл
                 </ColButton>
@@ -43,3 +42,11 @@ class FileInput extends Component {
 }
 
 export default FileInput;
+
+//todo: actions for loading file
+//todo: selects
+//todo: style file input
+//todo: edit actions and reducers for loading data from api
+//todo[OPTIONAL]: edit login form to be managed by redux
+//todo[OPTIONAL]: edit input file to be managed by redux
+//todo[OPTIONAL]: edit selects to be managed by redux
