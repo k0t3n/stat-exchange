@@ -1,41 +1,26 @@
-import { checkHttpStatus } from "../utils";
-import { loginUserFailure } from "../actions/auth";
-import { push } from 'react-router-redux';
+import { FETCH_DATA_REQUEST, RECEIVE_DATA } from "../actions/data";
 
-export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
-export const RECEIVE_DATA = 'RECEIVE_DATA';
+const initialState = {
+    pairs: [],
+    currencies: [],
+    isFetching: false
+};
 
-export function fetchDataRequest() {
-    return {
-        type: FETCH_DATA_REQUEST
-    }
-}
+export default function dataReducer(state = initialState, action) {
+    switch (action.type) {
+        case FETCH_DATA_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
 
-export function receiveData(data) {
-    return {
-        type: RECEIVE_DATA,
-        data
-    }
-}
+        case RECEIVE_DATA:
+            return Object.assign({}, state, {
+                pairs: action.data.pairs,
+                currencies: action.data.currencies,
+                isFetching: false
+            });
 
-export function fetchData(URL, token) {
-    return function(dispatch) {
-        dispatch(fetchDataRequest());
-        return fetch(URL, {
-            headers: {
-                'Authorization': `JWT ${token}`
-            }
-        })
-            .then(checkHttpStatus)
-            .then(res => res.json())
-            .then(data => {
-                dispatch(receiveData(data));
-            })
-            .catch(err => {
-                if (err.response.status === 401) {
-                    dispatch(loginUserFailure(err));
-                    dispatch(push('/auth'));
-                }
-            })
+        default:
+            return state;
     }
 }
