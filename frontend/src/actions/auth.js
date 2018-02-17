@@ -5,8 +5,6 @@ export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGOUT_USER = 'LOGIN_USER';
-// export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
-// export const RECEIVE_DATA = 'RECEIVE_DATA';
 
 const ROOT_URL = 'api.stat-exchange.com';
 
@@ -78,38 +76,3 @@ export function logoutUser() {
         dispatch(push('/auth'));
     }
 }
-
-// export function fetchDataRequest() {
-//     return {
-//         type: FETCH_DATA_REQUEST
-//     }
-// }
-//
-// export function receiveData(data) {
-//     return {
-//         type: RECEIVE_DATA,
-//         data
-//     }
-// }
-
-// export function fetchData(token) {
-//     return function(dispatch) {
-//         dispatch(fetchDataRequest());
-//         return fetch(URL, {
-//             headers: {
-//                 'Authorization': `JWT ${token}`
-//             }
-//         })
-//             .then(checkHttpStatus)
-//             .then(res => res.json())
-//             .then(data => {
-//                 dispatch(receiveData(data));
-//             })
-//             .catch(err => {
-//                 if (err.response.status === 401) {
-//                     dispatch(loginUserFailure(err));
-//                     dispatch(push('/auth'));
-//                 }
-//             })
-//     }
-// }
