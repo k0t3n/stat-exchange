@@ -13,16 +13,16 @@ import ReduxThunk from 'redux-thunk';
 import reducer from './reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-const initialState = {
-    auth: {
-        token: null,
-        user: null,
-        isAuthenticated: true,
-        isAuthenticating: false,
-        statusText: null,
-        error: false
-    }
-};
+// const initialState = {
+//     auth: {
+//         token: null,
+//         user: null,
+//         isAuthenticated: true,
+//         isAuthenticating: false,
+//         statusText: null,
+//         error: false
+//     }
+// };
 
 const history = createHistory();
 
@@ -33,7 +33,6 @@ const middleware = [
 
 const store = createStore(
     reducer,
-    initialState,
     composeWithDevTools(
         applyMiddleware(...middleware)
     )
