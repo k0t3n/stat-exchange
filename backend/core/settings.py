@@ -1,5 +1,6 @@
-import os
 import datetime
+import os
+
 from .local_settings import *
 
 INSTALLED_APPS = [
@@ -23,7 +24,6 @@ INSTALLED_APPS = [
 
     # Project apps
     'accounts',
-    'api',
     'stats'
 ]
 
