@@ -8,7 +8,7 @@ export const LOGOUT_USER = 'LOGIN_USER';
 // export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
 // export const RECEIVE_DATA = 'RECEIVE_DATA';
 
-const ROOT_URL = '127.0.0.1:8000';
+const ROOT_URL = 'api.stat-exchange.com';
 
 export function loginUserRequest() {
     return {
@@ -97,7 +97,7 @@ export function logoutUser() {
 //         dispatch(fetchDataRequest());
 //         return fetch(URL, {
 //             headers: {
-//                 'Authorization': `${token}`
+//                 'Authorization': `JWT ${token}`
 //             }
 //         })
 //             .then(checkHttpStatus)

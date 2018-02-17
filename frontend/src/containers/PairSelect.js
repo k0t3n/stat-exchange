@@ -4,12 +4,12 @@ import ColButton from "../components/ColButton";
 import { Row } from 'react-bootstrap';
 
 class PairSelect extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             firstCurrency: 'Выберите первую валюту',
             secondCurrency: 'Выберите вторую валюту',
-            firstOptions: ['BTC', 'RUB', 'ETH', 'JOT', 'DOL'], // init from props
+            firstOptions: props.currencies, // init from props
             secondOptions: []
         };
 
@@ -26,21 +26,13 @@ class PairSelect extends Component {
 
     filterOptions(cr) {
         const firstCurrency = cr;
-        const pairs = [ // props
-            {first_currency: 'BTC', second_currency: 'RUB'},
-            {first_currency: 'BTC', second_currency: 'ETH'},
-            {first_currency: 'RUB', second_currency: 'ETH'},
-            {first_currency: 'ETH', second_currency: 'RUB'},
-            {first_currency: 'JOT', second_currency: 'BTC'},
-            {first_currency: 'RUB', second_currency: 'BTC'},
-            {first_currency: 'ETH', second_currency: 'DOL'}
-        ];
 
-        return pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.second_currency);
+        return this.props.pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.second_currency);
     }
 
     handleChangeFirst(e) {
-        const options = this.filterOptions(e.target.value);
+        const options = this.filterOptions(e.target.value); // filter by first currency
+
         this.setState({
             firstCurrency: e.target.value,
             secondOptions: options
