@@ -4,6 +4,7 @@ import { privateComponent } from '../HOCs/privateComponent';
 import FileInput from "./FileInput";
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
+import ColButton from "../components/ColButton";
 
 const pairs = [ // from redux
     {first_currency: 'BTC', second_currency: 'RUB'},
@@ -25,9 +26,14 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <FileInput />
                 <Chart />
+                <ColButton
+                    size={3}
+                >
+                    Загрузить файл
+                </ColButton>
                 <PairSelect currencies={currencies} pairs={pairs}/>
+                <FileInput />
             </div>
         );
     }

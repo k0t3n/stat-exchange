@@ -3,6 +3,7 @@ import { Navbar, Button } from 'react-bootstrap';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 const Header = ({ redirect, isAuthenticated }) => {
     return (
@@ -33,6 +34,11 @@ const mapDispatchToProps = (dispatch) => {
     return {
         redirect: bindActionCreators(push, dispatch)
     }
+};
+
+Header.propTypes = {
+    redirect: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

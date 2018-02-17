@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Select from "../components/Select";
 import ColButton from "../components/ColButton";
+import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 
 class PairSelect extends Component {
@@ -76,5 +77,9 @@ class PairSelect extends Component {
         )
     }
 }
+
+PairSelect.propTypes = {
+    pairs: PropTypes.array
+};
 
 export default PairSelect;
