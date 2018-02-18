@@ -2,21 +2,37 @@ import React, { Component } from 'react';
 import { deleteFromChart } from "../actions/chart";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { ListGroup, ListGroupItem, Col } from 'react-bootstrap';
+import ColHeader from "../components/ColHeader";
 
 class ListOfLines extends Component {
     render() {
         return (
-            <ul className="ListOfPairs">
-                {
-                    this.props.pairs.map(pair => (
-                        <li
-                            className="pair"
-                            key={pair.id}
-                            onClick={() => this.props.deleteFromChart(pair.id)}
-                        >{pair.name}</li>
-                    ))
-                }
-            </ul>
+            <Col
+                className="ListOfPairs"
+                lg={6}
+                md={6}
+                sm={6}
+            >
+                <ColHeader
+                    size={12}
+                    h={4}>
+                    Список пар на графике
+                </ColHeader>
+                <ListGroup>
+                    {
+                        this.props.pairs.map(pair => (
+                            <ListGroupItem
+                                className="pair"
+                                key={pair.id}
+                                onClick={() => this.props.deleteFromChart(pair.id)}
+                            >
+                                {pair.name}
+                                </ListGroupItem>
+                        ))
+                    }
+                </ListGroup>
+            </Col>
         )
     }
 }

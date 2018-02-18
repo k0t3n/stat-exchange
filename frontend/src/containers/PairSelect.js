@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import '../styles/PairSelect.css';
 import Select from "../components/Select";
 import ColButton from "../components/ColButton";
 import PropTypes from 'prop-types';
-import { Row, Alert, Col } from 'react-bootstrap';
+import { Alert, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addToChart } from "../actions/chart";
+import ColHeader from "../components/ColHeader";
+import FileInputModal from "./FileInputModal";
 
 class PairSelect extends Component {
     constructor(props) {
@@ -87,31 +90,38 @@ class PairSelect extends Component {
         const { firstCurrency, lastCurrency, firstOptions, lastOptions } = this.state;
 
         return (
-            <div className="PairsSelect">
-                <Row>
-                    <Select
-                        options={['Выберите первую валюту', ...firstOptions]}
-                        onChange={this.handleChangeFirst}
-                        value={firstCurrency}
-                        offset={4}
-                    />
-                    <Select
-                        options={['Выберите вторую валюту', ...lastOptions]}
-                        onChange={this.handleChangeSecond}
-                        value={lastCurrency}
-                    />
-                </Row>
+            <Col
+                className="PairSelect"
+                lg={6}
+                md={6}
+                sm={6}
+            >
+                <ColHeader
+                    size={12}
+                    h={4}
+                >Добавление пары на графики</ColHeader>
+                <Select
+                    options={['Выберите первую валюту', ...firstOptions]}
+                    onChange={this.handleChangeFirst}
+                    value={firstCurrency}
+                />
+                <Select
+                    options={['Выберите вторую валюту', ...lastOptions]}
+                    onChange={this.handleChangeSecond}
+                    value={lastCurrency}
+                />
                 {this.props.error && this.renderError()}
+                <FileInputModal />
                 <ColButton
+                    className="add-button"
                     bsStyle="success"
-                    size={2}
-                    offset={5}
+                    size={6}
                     disabled={this.validateBtn()}
                     onClick={this.handleSubmit}
                 >
                     Добавить на график
                 </ColButton>
-            </div>
+            </Col>
         )
     }
 }
@@ -126,7 +136,9 @@ PairSelect.propTypes = {
 const mapStateToProps = (state) => {
     return {
         error: state.chart.error,
-        token: state.auth.token
+        token: state.auth.token,
+        pairs: state.data.pairs,
+        currencies: state.data.currencies
     }
 };
 

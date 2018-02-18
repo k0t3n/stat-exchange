@@ -227,9 +227,9 @@ class Chart extends Component {
 
         return (
             <Col
-                lg={5}
-                md={5}
-                sm={5}
+                lg={6}
+                md={6}
+                sm={6}
             >
                 <HighChart config={config} theme={HighChart.theme} />
             </Col>

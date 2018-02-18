@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import '../styles/App.css';
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
-import FileInputModal from "./FileInputModal";
+import ListOfLines from './ListOfLines';
 import { fetchData } from "../actions/data";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Pagination } from 'react-bootstrap';
+import { Pagination, Col } from 'react-bootstrap';
 
 class App extends Component {
     constructor() {
@@ -21,10 +21,6 @@ class App extends Component {
 
     componentWillMount() {
         this.fetchData();
-    }
-
-    componentDidMount() {
-        console.log('mounted')
     }
 
     fetchData() {
@@ -41,7 +37,7 @@ class App extends Component {
                 data: pair.stats.price
             }
         });
-        console.log('priceOptions = ', priceOptions);
+        // console.log('priceOptions = ', priceOptions);
 
         const amountOptions = pairsOnChart.map(pair => {
             return {
@@ -49,7 +45,7 @@ class App extends Component {
                 data: pair.stats.amount
             }
         });
-        console.log('amountOptions = ', amountOptions);
+        // console.log('amountOptions = ', amountOptions);
 
         return (
             <div>
@@ -68,7 +64,7 @@ class App extends Component {
                 data: pair.stats.total
             }
         });
-        console.log('totalOptions = ', totalOptions);
+        // console.log('totalOptions = ', totalOptions);
 
         const feeOptions = pairsOnChart.map(pair => {
             return {
@@ -76,7 +72,7 @@ class App extends Component {
                 data: pair.stats.fee
             }
         });
-        console.log('feeOptions = ', feeOptions);
+        // console.log('feeOptions = ', feeOptions);
 
         return (
             <div>
@@ -95,7 +91,7 @@ class App extends Component {
                 data: pair.stats.base_total_less_fee
             }
         });
-        console.log('totalOptions = ', baseOptions);
+        // console.log('totalOptions = ', baseOptions);
 
         const quoteOptions = pairsOnChart.map(pair => {
             return {
@@ -103,13 +99,32 @@ class App extends Component {
                 data: pair.stats.quote_total_less_fee
             }
         });
-        console.log('feeOptions = ', quoteOptions);
+        // console.log('feeOptions = ', quoteOptions);
 
         return (
             <div>
                 <Chart options={baseOptions} title="Base total less fee" />
                 <Chart options={quoteOptions} title="Quote total less fee" />
             </div>
+        )
+    }
+
+    renderPagination() {
+        return (
+            <Pagination className="Pagination">
+                <Pagination.Item
+                    active={this.state.active === 1}
+                    onClick={() => this.handleClick(1)}
+                >{1}</Pagination.Item>
+                <Pagination.Item
+                    active={this.state.active === 2}
+                    onClick={() => this.handleClick(2)}
+                >{2}</Pagination.Item>
+                <Pagination.Item
+                    active={this.state.active === 3}
+                    onClick={() => this.handleClick(3)}
+                >{3}</Pagination.Item>
+            </Pagination>
         )
     }
 
@@ -120,31 +135,28 @@ class App extends Component {
     }
 
     render() {
-        const { pairs, currencies } = this.props;
         const { active } = this.state;
+
         console.log('rendered');
 
         return (
-            <div className="App">
-                {
-                    [this.renderFirst(), this.renderSecond(), this.renderThird()][active - 1]
-                }
-                <Pagination>
-                    <Pagination.Item
-                        active={this.state.active === 1}
-                        onClick={() => this.handleClick(1)}
-                    >{1}</Pagination.Item>
-                    <Pagination.Item
-                        active={this.state.active === 2}
-                        onClick={() => this.handleClick(2)}
-                    >{2}</Pagination.Item>
-                    <Pagination.Item
-                        active={this.state.active === 3}
-                        onClick={() => this.handleClick(3)}
-                    >{3}</Pagination.Item>
-                </Pagination>
-                <FileInputModal />
-                {!this.props.isFetching && <PairSelect pairs={pairs} currencies={currencies} />}
+            <div>
+                <Col
+                    lg={12}
+                    md={12}
+                    sm={12}
+                >
+                    <div>
+                        {active === 1 ? this.renderFirst() : null}
+                        {active === 2 ? this.renderSecond() : null}
+                        {active === 3 ? this.renderThird() : null}
+                    </div>
+                    <div className="Pagination">
+                        {this.renderPagination()}
+                    </div>
+                </Col>
+                {!this.props.isFetching && <PairSelect />}
+                <ListOfLines />
             </div>
         );
     }
@@ -153,8 +165,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        currencies: state.data.currencies,
-        pairs: state.data.pairs,
         pairsOnChart: state.chart.pairs,
         token: state.auth.token,
         isFetching: state.data.isFetching
@@ -168,8 +178,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 App.propTypes = {
-    currencies: PropTypes.array,
-    pairs: PropTypes.array,
     pairsOnChart: PropTypes.array,
     token: PropTypes.string,
     isFetching: PropTypes.bool,

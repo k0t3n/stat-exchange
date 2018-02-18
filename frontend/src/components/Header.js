@@ -13,11 +13,15 @@ const Header = ({ redirect, isAuthenticated }) => {
             </Navbar.Header>
             <Navbar.Form pullRight>
                 {
-                    isAuthenticated && <Button
-                        type="submit"
-                        bsStyle="danger"
-                        onClick={() => redirect("/logout")}
-                    >Выйти</Button>
+                    isAuthenticated && (
+                        <div>
+                            <Button
+                                type="submit"
+                                bsStyle="danger"
+                                onClick={() => redirect("/logout")}
+                            >Выйти</Button>
+                        </div>
+                    )
                 }
             </Navbar.Form>
         </Navbar>
