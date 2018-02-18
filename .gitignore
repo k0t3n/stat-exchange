@@ -1,6 +1,8 @@
 .idea
-venv
-backend/db.sqlite3
-.DS_Store
-
-backend/core/local_settings.py
+accounts/__pycache__/
+accounts/migrations/__pycache__/
+core/__pycache__/
+stats/__pycache__/
+stats/migrations/__pycache__/
+uploads/1.csv
+uploads/test.xml
