@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Col } from 'react-bootstrap';
 import HighChart from 'react-highcharts/ReactHighstock.src';
-
-const options = [];
+import PropTypes from 'prop-types';
 
 class Chart extends Component {
     render() {
@@ -216,21 +215,21 @@ class Chart extends Component {
             contrastTextColor: '#F0F0F3',
             maskColor: 'rgba(255,255,255,0.3)',
             title: {
-                text: 'SOME TEXT',
+                text: this.props.title,
                 style: {
                     color: '#E0E0E3',
                     textTransform: 'uppercase',
                     fontSize: '20px'
                 }
             },
-            series: options // from redux
+            series: this.props.options // from redux
         };
 
         return (
             <Col
-                lg={9}
-                md={9}
-                sm={9}
+                lg={5}
+                md={5}
+                sm={5}
             >
                 <HighChart config={config} theme={HighChart.theme} />
             </Col>
@@ -238,5 +237,9 @@ class Chart extends Component {
 
     }
 }
+
+Chart.propTypes = {
+    options: PropTypes.array
+};
 
 export default Chart;

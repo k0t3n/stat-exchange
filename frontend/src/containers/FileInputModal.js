@@ -28,9 +28,9 @@ class FileInputModal extends Component {
         return (
             <div>
                 <Col
-                    lg={3}
-                    md={3}
-                    sm={3}
+                    lg={2}
+                    md={2}
+                    sm={2}
                 >
                     <ColButton
                         onClick={this.handleShow}

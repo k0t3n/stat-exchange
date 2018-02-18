@@ -1,4 +1,5 @@
 import { ADD_TO_CHART_REQUEST, ADD_TO_CHART_SUCCESS, ADD_TO_CHART_FAILURE, DELETE_FROM_CHART, CLEAR_FROM_CHART } from "../actions/chart";
+import { getBy } from "../utils";
 
 const initialState = {
     pairs: [],
@@ -13,11 +14,21 @@ export default function chartReducer(state = initialState, action) {
             });
 
         case ADD_TO_CHART_SUCCESS:
+            const stats = {
+                price: getBy("price", action.data),
+                amount: getBy("amount", action.data),
+                total: getBy("total", action.data),
+                fee: getBy("fee", action.data),
+                base_total_less_fee: getBy("base_total_less_fee", action.data),
+                quote_total_less_fee: getBy("quote_total_less_fee", action.data)
+            };
+
             const newPairs = [
                 ...state.pairs,
                 {
                     id: action.id,
-                    stats: action.data
+                    name: action.name,
+                    stats: stats
                 }
             ];
 

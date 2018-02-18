@@ -1,5 +1,7 @@
 import { checkHttpStatus } from "../utils";
 import v4 from 'uuid/v4';
+import {push} from "react-router-redux";
+import {loginUserFailure} from "./auth";
 
 export const ADD_TO_CHART_REQUEST = 'ADD_TO_CHART_REQUEST';
 export const ADD_TO_CHART_SUCCESS = 'ADD_TO_CHART_SUCCESS';
@@ -9,10 +11,11 @@ export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 
 const URL = 'http://api.stat-exchange.com/stats/getStats';
 
-function addToChartSuccess(data) {
+function addToChartSuccess(data, name) {
     return {
         type: ADD_TO_CHART_SUCCESS,
         id: v4(),
+        name,
         data
     }
 }
@@ -42,7 +45,7 @@ export function clearFromChart() {
     }
 }
 
-export function addToChart(pair) {
+export function addToChart(pair, token) {
     return function (dispatch) {
         dispatch(addToChartRequest());
 
@@ -52,15 +55,23 @@ export function addToChart(pair) {
 
         return fetch(URL, {
             method: 'post',
+            headers: {
+                'Authorization': `JWT ${token}`
+            },
             body: formData
         })
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
             .then(data => {
-                dispatch(addToChartSuccess(data));
+                const name = `${pair.first_currency}/${pair.last_currency}`;
+                dispatch(addToChartSuccess(data, name));
             })
             .catch(err => {
                 dispatch(addToChartFailure());
+                if (err.response.status === 401) {
+                    dispatch(loginUserFailure(err));
+                    dispatch(push('/auth'));
+                }
                 console.log(err);
             })
     }

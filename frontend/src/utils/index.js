@@ -29,3 +29,14 @@ export function saveState(state) {
         // return undefined;
     }
 }
+
+export function getBy(by, array) {
+    return array
+        .map(obj => {
+            let date = new Date(obj.datetime).getTime();
+            let data = parseFloat(obj[by]);
+
+            return [date, data];
+        })
+        .sort((a, b) => a[0] > b[0]);
+}

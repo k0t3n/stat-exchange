@@ -13,7 +13,7 @@ class ListOfLines extends Component {
                             className="pair"
                             key={pair.id}
                             onClick={() => this.props.deleteFromChart(pair.id)}
-                        >{pair.stats.currency}</li>
+                        >{pair.name}</li>
                     ))
                 }
             </ul>

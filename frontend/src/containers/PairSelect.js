@@ -52,13 +52,13 @@ class PairSelect extends Component {
 
     handleSubmit() {
         const { firstCurrency, lastCurrency } = this.state;
-
+        const { token } = this.props;
         const pair = {
             first_currency: firstCurrency,
             last_currency: lastCurrency
         };
 
-        this.props.addToChart(pair);
+        this.props.addToChart(pair, token);
 
         this.setState({
             firstCurrency: 'Выберите первую валюту',
@@ -125,7 +125,8 @@ PairSelect.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        error: state.chart.error
+        error: state.chart.error,
+        token: state.auth.token
     }
 };
 
