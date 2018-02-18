@@ -17,6 +17,11 @@ const pairs = [ // from redux
 
 const currencies = ['BTC', 'RUB', 'ETH', 'JOT', 'DOL']; // from redux
 
+let options = [{  // from redux
+    name: 'BTC/RUB',
+    data: []
+}];
+
 class App extends Component {
     componentDidMount() {
         console.log('App mounted');
@@ -25,7 +30,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Chart />
+                <Chart options={options} />
                 <FileInputModal />
                 <PairSelect currencies={currencies} pairs={pairs}/>
             </div>

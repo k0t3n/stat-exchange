@@ -21,6 +21,7 @@ export function receiveStats(stats) {
 export function fetchStats(URL, token) {
     return function(dispatch) {
         dispatch(fetchDataRequest());
+        console.log(">>>> stats request");
         return fetch(URL, {
             headers: {
                 'Authorization': `JWT ${token}`

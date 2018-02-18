@@ -6,7 +6,7 @@ export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGOUT_USER = 'LOGIN_USER';
 
-const ROOT_URL = 'api.stat-exchange.com';
+const URL = 'api.stat-exchange.com/api/accounts/login/';
 
 export function loginUserRequest() {
     return {
@@ -48,7 +48,7 @@ export function loginUser(login, pass, redirect = '/') {
             password: pass
         };
         console.log('>>>> login request');
-        return fetch(`${ROOT_URL}/api/accounts/login/`, {
+        return fetch(URL, {
             method: 'post',
             headers: {
                 'Accept': 'application/json',

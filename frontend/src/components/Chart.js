@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import { Col } from 'react-bootstrap';
 import HighChart from 'react-highcharts/ReactHighstock.src';
 
-let options = [{
-    name: 'BTC/RUB',
-    data: []
-}];
-
 class Chart extends Component {
     render() {
         const config = {
