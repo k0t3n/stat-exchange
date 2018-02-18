@@ -9,10 +9,6 @@ export function checkHttpStatus(response) {
     }
 }
 
-export function parseJSON(response) {
-    return response.json();
-}
-
 export function loadState() {
     try {
         const serializedState = localStorage.getItem("state");

@@ -35,7 +35,6 @@ class Chart extends Component {
                 title: {
                     style: {
                         color: '#A0A0A3'
-
                     }
                 }
             },

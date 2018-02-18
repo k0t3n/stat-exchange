@@ -53,7 +53,7 @@ export function loginUser(login, pass, redirect = '/') {
             body: formData
         })
             .then(res => checkHttpStatus(res))
-            .then(parseJSON)
+            .then(res => res.json())
             .then(
                 data => {
                     dispatch(loginUserSuccess(data));
