@@ -5,6 +5,7 @@ export const ADD_TO_CHART_REQUEST = 'ADD_TO_CHART_REQUEST';
 export const ADD_TO_CHART_SUCCESS = 'ADD_TO_CHART_SUCCESS';
 export const ADD_TO_CHART_FAILURE = 'ADD_TO_CHART_FAILURE';
 export const DELETE_FROM_CHART = 'DELETE_FROM_CHART';
+export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 
 const URL = 'http://api.stat-exchange.com/stats/getStats';
 
@@ -28,10 +29,16 @@ function addToChartRequest() {
     }
 }
 
-function deleteFromChart(id) {
+export function deleteFromChart(id) {
     return {
         type: DELETE_FROM_CHART,
         id
+    }
+}
+
+export function clearFromChart() {
+    return {
+        type: CLEAR_FROM_CHART
     }
 }
 

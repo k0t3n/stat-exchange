@@ -1,4 +1,4 @@
-import { ADD_TO_CHART_REQUEST, ADD_TO_CHART_SUCCESS, ADD_TO_CHART_FAILURE, DELETE_FROM_CHART } from "../actions/chart";
+import { ADD_TO_CHART_REQUEST, ADD_TO_CHART_SUCCESS, ADD_TO_CHART_FAILURE, DELETE_FROM_CHART, CLEAR_FROM_CHART } from "../actions/chart";
 
 const initialState = {
     pairs: [],
@@ -41,6 +41,12 @@ export default function chartReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 pairs: pairs
             });
+
+        case CLEAR_FROM_CHART:
+            return {
+                pairs: [],
+                error: false
+            };
 
         default:
             return state;

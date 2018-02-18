@@ -1,5 +1,4 @@
 import { checkHttpStatus } from "../utils";
-import { showNotification } from "./notification";
 import { fetchDataRequest } from "./data";
 
 export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
@@ -20,10 +19,9 @@ export function uploadSuccess() {
     }
 }
 
-export function uploadFailure(err) {
+export function uploadFailure() {
     return {
-        type: UPLOAD_FAILURE,
-        error: err.response.statusText
+        type: UPLOAD_FAILURE
     }
 }
 
@@ -37,14 +35,14 @@ export function uploadFile(file) {
         })
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
-            .then(data => {
+            .then((data) => {
+                console.log(data);
                 dispatch(uploadSuccess());
                 dispatch(fetchDataRequest());
-                dispatch(showNotification(data.text)) // show status text, that file was uploaded
             })
             .catch(err => {
-                dispatch(uploadFailure(err));
-                showNotification(err.response.statusText) // show error
+                console.log(err);
+                dispatch(uploadFailure());
             })
     }
 }

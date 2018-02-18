@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../styles/App.css';
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
@@ -48,6 +49,14 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchData: bindActionCreators(fetchData, dispatch)
     }
+};
+
+App.propTypes = {
+    currencies: PropTypes.array,
+    pairs: PropTypes.array,
+    token: PropTypes.string,
+    isFetching: PropTypes.bool,
+    fetchData: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

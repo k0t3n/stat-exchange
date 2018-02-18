@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Col } from 'react-bootstrap';
 import FileInput from './FileInput';
 import ColButton from '../components/ColButton';
+import ListOfLines from './ListOfLines';
 import '../styles/FileInputModal.css';
 
 class FileInputModal extends Component {
@@ -26,12 +27,19 @@ class FileInputModal extends Component {
     render() {
         return (
             <div>
-                <ColButton
-                    onClick={this.handleShow}
-                    size={3}
+                <Col
+                    lg={3}
+                    md={3}
+                    sm={3}
                 >
-                    Загрузить файл
-                </ColButton>
+                    <ColButton
+                        onClick={this.handleShow}
+                        size={12}
+                    >
+                        Загрузить файл
+                    </ColButton>
+                    <ListOfLines />
+                </Col>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header>
                         <Modal.Title>Загрузка файла</Modal.Title>
