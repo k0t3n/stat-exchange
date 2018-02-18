@@ -1,4 +1,4 @@
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, parseJSON } from "../utils";
 import { push } from 'react-router-redux';
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
@@ -6,7 +6,7 @@ export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGOUT_USER = 'LOGIN_USER';
 
-const URL = 'api.stat-exchange.com/api/accounts/login/';
+const URL = 'http://api.stat-exchange.com/accounts/login/';
 
 export function loginUserRequest() {
     return {
@@ -18,14 +18,13 @@ export function loginUserSuccess(data) {
     localStorage.setItem('token', data.token);
     return {
         type: LOGIN_USER_SUCCESS,
-        token: '',//data.token,
-        user: ''//data.user
+        token: data.token,
+        user: data.user
     }
 }
 
 export function loginUserFailure(err) {
     localStorage.removeItem('token');
-    console.log(err);
     return {
         type: LOGIN_USER_FAILURE,
         status: err.response.status,
@@ -43,21 +42,17 @@ function logout() {
 export function loginUser(login, pass, redirect = '/') {
     return function(dispatch) {
         dispatch(loginUserRequest());
-        const data = {
-            username: login,
-            password: pass
-        };
-        console.log('>>>> login request');
+
+        const formData = new FormData();
+        formData.append("username", login);
+        formData.append("password", pass);
+
         return fetch(URL, {
             method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            body: formData
         })
             .then(res => checkHttpStatus(res))
-            .then(res => res.json())
+            .then(parseJSON)
             .then(
                 data => {
                     dispatch(loginUserSuccess(data));
@@ -65,7 +60,7 @@ export function loginUser(login, pass, redirect = '/') {
                 }
             )
             .catch(err => {
-                dispatch(loginUserFailure(err))
+                dispatch(loginUserFailure(err));
             })
     }
 }

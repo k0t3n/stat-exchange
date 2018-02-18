@@ -3,7 +3,7 @@ import { LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER
 const initialState = {
     token: null,
     user: null,
-    isAuthenticated: true,
+    isAuthenticated: false,
     isAuthenticating: false,
     statusText: null
 };
@@ -28,12 +28,14 @@ export default function authReducer(state = initialState, action) {
             });
 
         case LOGIN_USER_FAILURE:
+            const statusText = action.status === 400 ? 'Неверные логин или пароль' : `Ошибка авторизации: ${action.status} ${action.statusText}`;
+
             return Object.assign({}, state, {
                 isAuthenticating: false,
                 isAuthenticated: false,
                 token: null,
                 user: null,
-                statusText: `Authenticating Error: ${action.status} ${action.statusText}`,
+                statusText,
                 error: true
             });
 
