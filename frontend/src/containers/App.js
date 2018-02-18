@@ -1,44 +1,56 @@
 import React, { Component } from 'react';
 import '../styles/App.css';
-import { privateComponent } from '../HOCs/privateComponent';
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
 import FileInputModal from "./FileInputModal";
+import { fetchData } from "../actions/data";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-const pairs = [ // from redux
-    {first_currency: 'BTC', second_currency: 'RUB'},
-    {first_currency: 'BTC', second_currency: 'ETH'},
-    {first_currency: 'RUB', second_currency: 'ETH'},
-    {first_currency: 'ETH', second_currency: 'RUB'},
-    {first_currency: 'JOT', second_currency: 'BTC'},
-    {first_currency: 'RUB', second_currency: 'BTC'},
-    {first_currency: 'ETH', second_currency: 'DOL'}
-];
-
-const currencies = ['BTC', 'RUB', 'ETH', 'JOT', 'DOL']; // from redux
-
-let options = [{  // from redux
+let options = [{  // from redux to chart
     name: 'BTC/RUB',
     data: []
 }];
 
 class App extends Component {
-    componentDidMount() {
-        console.log('App mounted');
+    componentWillMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        let token = this.props.token;
+        this.props.fetchData(token);
     }
 
     render() {
+        const { pairs, currencies } = this.props;
         return (
             <div className="App">
                 <Chart options={options} />
                 <FileInputModal />
-                <PairSelect currencies={currencies} pairs={pairs}/>
+                {!this.props.isFetching && <PairSelect pairs={pairs} currencies={currencies} />}
             </div>
         );
     }
 }
 
-export default privateComponent(App);
+
+const mapStateToProps = (state) => {
+    return {
+        currencies: state.data.currencies,
+        pairs: state.data.pairs,
+        token: state.auth.token,
+        isFetching: state.data.isFetching
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchData: bindActionCreators(fetchData, dispatch)
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 //todo: graphic component
 //todo: get pairs and currencies from redux and give it to pairselect

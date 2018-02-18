@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { logoutUser } from "../actions/auth";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { privateComponent } from "../HOCs/privateComponent";
 import PropTypes from 'prop-types';
 
 class SignOut extends Component {
@@ -29,4 +28,4 @@ SignOut.propTypes = {
     logoutUser: PropTypes.func.isRequired
 };
 
-export default connect(undefined, mapDispatchToProps)(privateComponent(SignOut));
+export default connect(undefined, mapDispatchToProps)(SignOut);

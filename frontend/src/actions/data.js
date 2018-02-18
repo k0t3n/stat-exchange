@@ -4,8 +4,9 @@ import { push } from 'react-router-redux';
 
 export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
+export const CLEAR_DATA = 'CLEAR_DATA';
 
-const URL = '127.0.0.1';
+const URL = 'http://api.stat-exchange.com/stats/getCurrencyPairs';
 
 export function fetchDataRequest() {
     return {
@@ -17,6 +18,12 @@ export function receiveData(data) {
     return {
         type: RECEIVE_DATA,
         data
+    }
+}
+
+export function clearData() {
+    return {
+        type: CLEAR_DATA
     }
 }
 

@@ -9,9 +9,9 @@ class PairSelect extends Component {
         super(props);
         this.state = {
             firstCurrency: 'Выберите первую валюту',
-            secondCurrency: 'Выберите вторую валюту',
-            firstOptions: props.currencies, // init from props
-            secondOptions: []
+            lastCurrency: 'Выберите вторую валюту',
+            firstOptions: props.currencies,
+            lastOptions: []
         };
 
         this.handleChangeFirst = this.handleChangeFirst.bind(this);
@@ -20,15 +20,15 @@ class PairSelect extends Component {
     }
 
     validateBtn() {
-        const { firstCurrency, secondCurrency } = this.state;
+        const { firstCurrency, lastCurrency } = this.state;
 
-        return (firstCurrency === 'Выберите первую валюту' || secondCurrency === 'Выберите вторую валюту');
+        return (firstCurrency === 'Выберите первую валюту' || lastCurrency === 'Выберите вторую валюту');
     }
 
     filterOptions(cr) {
         const firstCurrency = cr;
 
-        return this.props.pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.second_currency);
+        return this.props.pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.last_currency);
     }
 
     handleChangeFirst(e) {
@@ -36,18 +36,18 @@ class PairSelect extends Component {
 
         this.setState({
             firstCurrency: e.target.value,
-            secondOptions: options
+            lastOptions: options
         });
     }
 
     handleChangeSecond(e) {
         this.setState({
-            secondCurrency: e.target.value
+            lastCurrency: e.target.value
         })
     }
 
     render() {
-        const { firstCurrency, secondCurrency, firstOptions, secondOptions } = this.state;
+        const { firstCurrency, lastCurrency, firstOptions, lastOptions } = this.state;
 
         return (
             <div className="PairsSelect">
@@ -59,9 +59,9 @@ class PairSelect extends Component {
                         offset={4}
                     />
                     <Select
-                        options={['Выберите вторую валюту', ...secondOptions]}
+                        options={['Выберите вторую валюту', ...lastOptions]}
                         onChange={this.handleChangeSecond}
-                        value={secondCurrency}
+                        value={lastCurrency}
                     />
                 </Row>
                 <ColButton
@@ -79,7 +79,8 @@ class PairSelect extends Component {
 }
 
 PairSelect.propTypes = {
-    pairs: PropTypes.array
+    pairs: PropTypes.array,
+    currencies: PropTypes.array
 };
 
 export default PairSelect;

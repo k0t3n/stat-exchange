@@ -1,5 +1,6 @@
 import { checkHttpStatus, parseJSON } from "../utils";
 import { push } from 'react-router-redux';
+import { clearData } from "./data";
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
@@ -67,6 +68,7 @@ export function loginUser(login, pass, redirect = '/') {
 
 export function logoutUser() {
     return (dispatch) => {
+        dispatch(clearData());
         dispatch(logout());
         dispatch(push('/auth'));
     }

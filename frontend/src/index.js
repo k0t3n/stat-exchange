@@ -9,20 +9,10 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import { createStore, applyMiddleware } from "redux";
+import { saveState, loadState } from "./utils";
 import ReduxThunk from 'redux-thunk';
 import reducer from './reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
-
-// const initialState = {
-//     auth: {
-//         token: null,
-//         user: null,
-//         isAuthenticated: true,
-//         isAuthenticating: false,
-//         statusText: null,
-//         error: false
-//     }
-// };
 
 const history = createHistory();
 
@@ -31,16 +21,26 @@ const middleware = [
     routerMiddleware(history)
 ];
 
+const persistedState = loadState();
+
 const store = createStore(
     reducer,
+    persistedState,
     composeWithDevTools(
         applyMiddleware(...middleware)
     )
 );
 
-let token = localStorage.getItem('token');
-if (token !== null) {
-    store.dispatch(loginUserSuccess(token));
+store.subscribe(() => {
+    saveState(store.getState());
+});
+
+let data = {
+    token: persistedState.auth.token,
+    user: persistedState.auth.user
+};
+if (data.token !== null) {
+    store.dispatch(loginUserSuccess(data));
 }
 
 ReactDOM.render(
