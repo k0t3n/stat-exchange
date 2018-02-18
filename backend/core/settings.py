@@ -3,6 +3,9 @@ import os
 
 from .local_settings import *
 
+# TODO: настроить на продакшене
+CORS_ORIGIN_ALLOW_ALL = True
+
 INSTALLED_APPS = [
     # Django core apps
     'django.contrib.admin',
@@ -18,6 +21,9 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
+    # Cors headers
+    'corsheaders',
+
     # AllAuth
     'allauth',
     'allauth.account',
@@ -30,6 +36,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -107,7 +114,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -134,7 +140,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Redis/Celery
 REDIS_HOST = 'localhost'
