@@ -5,6 +5,7 @@ import data from './data';
 import stats from './stats';
 import notification from './notification';
 import upload from './upload';
+import chart from './chart';
 
 export default combineReducers({
     auth,
@@ -12,5 +13,6 @@ export default combineReducers({
     stats,
     notification,
     upload,
+    chart,
     router: routerReducer
 })

@@ -8,11 +8,10 @@ export const DELETE_FROM_CHART = 'DELETE_FROM_CHART';
 
 const URL = 'http://api.stat-exchange.com/stats/getStats';
 
-function addToChartSuccess(pair, data) {
+function addToChartSuccess(data) {
     return {
         type: ADD_TO_CHART_SUCCESS,
         id: v4(),
-        pair,
         data
     }
 }
@@ -51,7 +50,7 @@ export function addToChart(pair) {
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
             .then(data => {
-                dispatch(addToChartSuccess(pair, data));
+                dispatch(addToChartSuccess(data));
             })
             .catch(err => {
                 dispatch(addToChartFailure());
