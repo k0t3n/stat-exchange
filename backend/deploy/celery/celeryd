@@ -16,7 +16,7 @@ CELERYD_PID_FILE="/tmp/stat-exchange/backend/%n.pid"
 # Workers should run as an unprivileged user.
 #   You need to create this user manually (or you can choose
 #   a user/group combination that already exists (e.g., nobody).
-CELERYD_USER="k0t3b"
+CELERYD_USER="k0t3n"
 CELERYD_GROUP="sudo"
 
 # If enabled pid and log directories will be created if missing,
