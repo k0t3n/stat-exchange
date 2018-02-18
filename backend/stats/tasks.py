@@ -1,10 +1,10 @@
-import os
 import csv
+import os
 
 from celery import Task
-from core.celery import app
 from celery.result import AsyncResult
 
+from core.celery import app
 from core.settings import BASE_DIR, UPLOAD_DIR
 from .models import StatsUploadEvent, Stats, CurrencyPair
 
@@ -41,7 +41,7 @@ def start_parse(filename):
             data.append(
                 Stats(
                     type=item['Type'].lower(),
-                    currency=CurrencyPair.objects.get_or_create(
+                    currency_pair=CurrencyPair.objects.get_or_create(
                         first_currency=item['Market'].split('/')[0],
                         last_currency=item['Market'].split('/')[1],
                     )[0],  # because get_or_create() returns tuple

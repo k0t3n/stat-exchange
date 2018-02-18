@@ -1,5 +1,7 @@
 from django.db import models
 
+from .utils import upload_to
+
 
 class CurrencyPair(models.Model):
     first_currency = models.CharField(
@@ -80,7 +82,8 @@ class Stats(models.Model):
         verbose_name_plural = 'статистика'
 
     def __str__(self):
-        return '{} {}/{}'.format(self.type.capitalize(), self.currency.first_currency, self.currency.last_currency)
+        return '{} {}/{}'.format(self.type.capitalize(), self.currency_pair.first_currency,
+                                 self.currency_pair.last_currency)
 
 
 class StatsUploadEvent(models.Model):
@@ -108,10 +111,11 @@ class StatsUploadEvent(models.Model):
         verbose_name='статус'
     )
 
-    filename = models.FilePathField(
-        recursive=True,
-        path='uploads/',
-        verbose_name='путь до файла'
+    file = models.FileField(
+        null=True, blank=True,
+        upload_to=upload_to,
+        verbose_name='файл',
+        default=None
     )
 
     class Meta:

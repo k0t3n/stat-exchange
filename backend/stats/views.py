@@ -6,9 +6,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
 
 from .models import Stats, StatsUploadEvent, CurrencyPair
-from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, StatsSerializer
+from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, GetStatsSerializer
 from .tasks import start_parse
-from .utils import handle_uploaded_file
 
 
 class StatsUploadView(APIView):
@@ -18,17 +17,16 @@ class StatsUploadView(APIView):
 
     parser_classes = (MultiPartParser,)
 
-    permission_classes = IsAuthenticated
+    permission_classes = (IsAuthenticated,)
 
-    def put(self, request, filename, format=None):
+    def put(self, request):
         file = request.FILES['file']
-        handle_uploaded_file(file, filename)  # сохраняем файл
 
-        task = start_parse.delay(filename)
+        task = start_parse.delay(str(file))
 
         StatsUploadEvent.objects.create(
             task_id=task,
-            filename=filename,
+            file=file,
         )
 
         return Response(status=204)
@@ -71,16 +69,14 @@ class StatsView(generics.GenericAPIView):
     def post(self, request, format=None):
         received_data = request.data
 
-        if received_data.get('first_currency') is None or received_data.get('lasr_currency') is None:
+        if received_data.get('first_currency') is None or received_data.get('last_currency') is None:
             raise ParseError('Пропущен один из параметров')
 
         stats_objects = Stats.objects.filter(
-            currency_pair=CurrencyPair.objects.get(
-                first_currency=received_data['first_currency'],
-                last_currency=received_data['last_currency'],
-            )
+            currency_pair__first_currency__icontains=received_data['first_currency'],
+            currency_pair__last_currency__icontains=received_data['last_currency'],
         )
 
-        response = StatsSerializer(stats_objects, many=True).data
+        response = GetStatsSerializer(stats_objects, many=True).data
 
         return Response(response)
