@@ -1,5 +1,6 @@
 import { checkHttpStatus } from "../utils";
 import { showNotification } from "./notification";
+import { fetchDataRequest } from "./data";
 
 export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
@@ -38,11 +39,12 @@ export function uploadFile(file) {
             .then(res => res.json())
             .then(data => {
                 dispatch(uploadSuccess());
+                dispatch(fetchDataRequest());
                 dispatch(showNotification(data.text)) // show status text, that file was uploaded
             })
             .catch(err => {
                 dispatch(uploadFailure(err));
-                showNotification(err.response.statusText)
+                showNotification(err.response.statusText) // show error
             })
     }
 }

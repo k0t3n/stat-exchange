@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Col } from 'react-bootstrap';
 import HighChart from 'react-highcharts/ReactHighstock.src';
 
+const options = [];
+
 class Chart extends Component {
     render() {
         const config = {

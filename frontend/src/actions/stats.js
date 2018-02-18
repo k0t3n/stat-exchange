@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 export const FETCH_STATS_REQUEST = 'FETCH_STATS_REQUEST';
 export const RECEIVE_STATS = 'RECEIVE_STATS';
 
-export function fetchDataRequest() {
+export function fetchStatsRequest() {
     return {
         type: FETCH_STATS_REQUEST
     }
@@ -20,7 +20,7 @@ export function receiveStats(stats) {
 
 export function fetchStats(URL, token) {
     return function(dispatch) {
-        dispatch(fetchDataRequest());
+        dispatch(fetchStatsRequest());
         console.log(">>>> stats request");
         return fetch(URL, {
             headers: {
