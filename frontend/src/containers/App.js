@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import '../styles/App.css';
 import { privateComponent } from '../HOCs/privateComponent';
-import FileInput from "./FileInput";
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
+import FileInputModal from "./FileInputModal";
 
 const pairs = [ // from redux
     {first_currency: 'BTC', second_currency: 'RUB'},
@@ -25,8 +25,8 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <FileInput />
                 <Chart />
+                <FileInputModal />
                 <PairSelect currencies={currencies} pairs={pairs}/>
             </div>
         );

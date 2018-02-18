@@ -65,7 +65,7 @@ LoginForm.propTypes = {
     statusText: PropTypes.string,
     onChangeInput: PropTypes.func.isRequired,
     validateForm: PropTypes.func.isRequired,
-    error: PropTypes.bool.isRequired,
+    error: PropTypes.bool
 };
 
 export default LoginForm;

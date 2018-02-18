@@ -35,18 +35,18 @@ class FileInput extends Component {
                     id="fileInput"
                     type="file"
                     accept=".txt"
-                    size={4}
-                    offset={4}
+                    size={6}
+                    offset={3}
                     onChange={(e) => this.handleChange(e.target.files[0])}
                 />
                 {this.state.fileSize > this.maxSize && (
                     <Col
-                        lg={4}
-                        md={4}
-                        sm={4}
-                        lgOffset={4}
-                        mdOffset={4}
-                        smOffset={4}
+                        lg={6}
+                        md={6}
+                        sm={6}
+                        lgOffset={3}
+                        mdOffset={3}
+                        smOffset={3}
                     >
                         <Alert bsStyle="danger">
                             Файл не должен превышать 10мб
