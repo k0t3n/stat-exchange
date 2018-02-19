@@ -21,6 +21,8 @@ class StatsUploadView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request):
+        if request.FILES.get('file') is None:
+            raise ParseError('Нет файла в запросе!')
         file = save_uploaded_file(request.FILES['file'])
 
         task = start_parse.delay(file)
@@ -30,16 +32,15 @@ class StatsUploadView(APIView):
             file=file,
         )
 
-        return Response(status=204)
+        return Response('ok', status=204)
 
 
 class StatsUploadEventView(generics.ListAPIView):
     """
     Вывод ивент-загрузок
     """
-    # TODO: пагинация
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = StatsUploadEvent.objects.all()[:10]
 
@@ -51,7 +52,7 @@ class CurrencyPairsView(generics.ListAPIView):
     Вывод всех пар монет
     """
 
-    # permission_classes = IsAuthenticated
+    permission_classes = (IsAuthenticated,)
 
     queryset = CurrencyPair.objects.all()
 
