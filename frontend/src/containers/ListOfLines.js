@@ -27,7 +27,7 @@ class ListOfLines extends Component {
                                 key={pair.id}
                                 onClick={() => this.props.deleteFromChart(pair.id)}
                             >
-                                {pair.name}
+                                {`${pair.firstCurrencyName}/${pair.lastCurrencyName}`}
                                 </ListGroupItem>
                         ))
                     }

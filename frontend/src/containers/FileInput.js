@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Alert, Col } from 'react-bootstrap';
 import Input from '../components/Input';
 import ColButton from "../components/ColButton";
+import PropTypes from 'prop-types';
 
 class FileInput extends Component {
     constructor() {
@@ -11,8 +12,9 @@ class FileInput extends Component {
             fileSize: 0
         };
 
-        this.maxSize = 100;
+        this.maxSize = 1000000;
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
     }
 
@@ -28,6 +30,14 @@ class FileInput extends Component {
         return (fileSize > this.maxSize || file === null);
     }
 
+    handleSubmit() {
+        this.props.onClick(this.state.file);
+        this.setState({
+            file: null,
+            fileSize: 0
+        })
+    }
+
     render() {
         return (
             <Form horizontal>
@@ -41,12 +51,12 @@ class FileInput extends Component {
                 />
                 {this.state.fileSize > this.maxSize && (
                     <Col
-                        lg={6}
-                        md={6}
-                        sm={6}
-                        lgOffset={3}
-                        mdOffset={3}
-                        smOffset={3}
+                        lg={8}
+                        md={8}
+                        sm={8}
+                        lgOffset={2}
+                        mdOffset={2}
+                        smOffset={2}
                     >
                         <Alert bsStyle="danger">
                             Файл не должен превышать 10мб
@@ -56,7 +66,7 @@ class FileInput extends Component {
                 <ColButton
                     bsStyle="success"
                     disabled={this.validate()}
-                    onClick={() => {}}
+                    onClick={this.handleSubmit}
                     size={4}
                     offset={4}
                 >
@@ -67,12 +77,13 @@ class FileInput extends Component {
     }
 }
 
+FileInput.propTypes = {
+    onClick: PropTypes.func
+};
+
 export default FileInput;
 
-//todo: actions for loading file
-//todo: selects
 //todo: style file input
-//todo: edit actions and reducers for loading data from api
 //todo[OPTIONAL]: edit login form to be managed by redux
 //todo[OPTIONAL]: edit input file to be managed by redux
 //todo[OPTIONAL]: edit selects to be managed by redux

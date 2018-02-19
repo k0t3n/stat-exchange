@@ -11,11 +11,12 @@ export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 
 const URL = 'http://api.stat-exchange.com/stats/getStats';
 
-function addToChartSuccess(data, name) {
+function addToChartSuccess(data, firstName, lastName) {
     return {
         type: ADD_TO_CHART_SUCCESS,
         id: v4(),
-        name,
+        firstName,
+        lastName,
         data
     }
 }
@@ -63,8 +64,7 @@ export function addToChart(pair, token) {
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
             .then(data => {
-                const name = `${pair.first_currency}/${pair.last_currency}`;
-                dispatch(addToChartSuccess(data, name));
+                dispatch(addToChartSuccess(data, pair.first_currency, pair.last_currency));
             })
             .catch(err => {
                 dispatch(addToChartFailure());

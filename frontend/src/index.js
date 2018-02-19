@@ -35,12 +35,16 @@ store.subscribe(() => {
     saveState(store.getState());
 });
 
-let data = {
-    token: persistedState.auth.token,
-    user: persistedState.auth.user
-};
-if (data.token !== null) {
-    store.dispatch(loginUserSuccess(data));
+try {
+    let data = {
+        token: persistedState.auth.token,
+        user: persistedState.auth.user
+    };
+    if (data.token !== null) {
+        store.dispatch(loginUserSuccess(data));
+    }
+} catch (err) {
+    console.log(err);
 }
 
 ReactDOM.render(

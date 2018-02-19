@@ -27,7 +27,8 @@ export default function chartReducer(state = initialState, action) {
                 ...state.pairs,
                 {
                     id: action.id,
-                    name: action.name,
+                    firstCurrencyName: action.firstName,
+                    lastCurrencyName: action.lastName,
                     stats: stats
                 }
             ];

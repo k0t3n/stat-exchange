@@ -1,29 +1,41 @@
-import { UPLOAD_REQUEST, UPLOAD_SUCCESS, UPLOAD_FAILURE } from "../actions/upload";
+import {
+    UPLOAD_REQUEST, UPLOAD_SUCCESS, UPLOAD_FAILURE,
+    SET_STATUS, CLEAR_ERROR
+} from "../actions/upload";
 
 const initialState = {
     isUploading: false,
-    status: ''
+    statuses: [],
+    error: false
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
         case UPLOAD_REQUEST:
-            return {
+            return Object.assign({}, state, {
                 isUploading: true,
-                status: 'uploading'
-            };
+                error: false
+            });
 
         case UPLOAD_SUCCESS:
-            return {
-                isUploading: false,
-                status: 'success'
-            };
+            return Object.assign({}, state, {
+                isUploading: false
+            });
 
         case UPLOAD_FAILURE:
-            return {
-                isUploading: false,
-                status: 'failure'
-            };
+            return Object.assign({}, state, {
+                error: true
+            });
+
+        case SET_STATUS:
+            return Object.assign({}, state, {
+                statuses: action.statuses
+            });
+
+        case CLEAR_ERROR:
+            return Object.assign({}, state, {
+                error: false
+            });
 
         default:
             return state;

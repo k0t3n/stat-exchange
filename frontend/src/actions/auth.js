@@ -6,7 +6,7 @@ import { clearFromChart } from "./chart";
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
-export const LOGOUT_USER = 'LOGIN_USER';
+export const LOGOUT_USER = 'LOGOUT_USER';
 
 const URL = 'http://api.stat-exchange.com/accounts/login/';
 

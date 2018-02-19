@@ -33,7 +33,7 @@ class App extends Component {
 
         const priceOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.firstCurrencyName}/${pair.lastCurrencyName}`,
                 data: pair.stats.price
             }
         });
@@ -41,7 +41,7 @@ class App extends Component {
 
         const amountOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.lastCurrencyName}/${pair.firstCurrencyName}`,
                 data: pair.stats.amount
             }
         });
@@ -60,7 +60,7 @@ class App extends Component {
 
         const totalOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.firstCurrencyName}/${pair.lastCurrencyName}`,
                 data: pair.stats.total
             }
         });
@@ -68,7 +68,7 @@ class App extends Component {
 
         const feeOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.firstCurrencyName}/${pair.lastCurrencyName}`,
                 data: pair.stats.fee
             }
         });
@@ -87,7 +87,7 @@ class App extends Component {
 
         const baseOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.firstCurrencyName}/${pair.lastCurrencyName}`,
                 data: pair.stats.base_total_less_fee
             }
         });
@@ -95,7 +95,7 @@ class App extends Component {
 
         const quoteOptions = pairsOnChart.map(pair => {
             return {
-                name: pair.name,
+                name: `${pair.firstCurrencyName}/${pair.lastCurrencyName}`,
                 data: pair.stats.quote_total_less_fee
             }
         });
@@ -185,6 +185,3 @@ App.propTypes = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-//todo: graphic component
-//todo: get pairs and currencies from redux and give it to pairselect

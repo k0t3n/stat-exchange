@@ -77,7 +77,8 @@ class Chart extends Component {
                     },
                     marker: {
                         lineColor: '#333'
-                    }
+                    },
+                    dataGrouping: false
                 },
                 boxplot: {
                     fillColor: '#505053'
