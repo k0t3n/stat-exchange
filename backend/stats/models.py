@@ -1,7 +1,5 @@
 from django.db import models
 
-from .utils import upload_to
-
 
 class CurrencyPair(models.Model):
     first_currency = models.CharField(
@@ -111,11 +109,11 @@ class StatsUploadEvent(models.Model):
         verbose_name='статус'
     )
 
-    file = models.FileField(
-        null=True, blank=True,
-        upload_to=upload_to,
-        verbose_name='файл',
-        default=None
+    file = models.FilePathField(
+        recursive=True,
+        allow_folders=True, allow_files=True,
+        default=None,
+        verbose_name='путь до файла',
     )
 
     class Meta:

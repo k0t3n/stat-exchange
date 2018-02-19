@@ -8,6 +8,7 @@ from rest_framework.views import APIView, Response
 from .models import Stats, StatsUploadEvent, CurrencyPair
 from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, GetStatsSerializer
 from .tasks import start_parse
+from .utils import save_uploaded_file
 
 
 class StatsUploadView(APIView):
@@ -20,9 +21,9 @@ class StatsUploadView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request):
-        file = request.FILES['file']
+        file = save_uploaded_file(request.FILES['file'])
 
-        task = start_parse.delay(str(file))
+        task = start_parse.delay(file)
 
         StatsUploadEvent.objects.create(
             task_id=task,
