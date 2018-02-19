@@ -27,6 +27,7 @@ class Stats(models.Model):
     )
 
     type = models.CharField(
+        blank=True, null=True,
         max_length=5,
         choices=TYPES,
         verbose_name='тип'
@@ -61,7 +62,7 @@ class Stats(models.Model):
         verbose_name='процент комиссии'
     )
 
-    order = models.PositiveIntegerField(
+    order = models.BigIntegerField(
         verbose_name='номер заказа'
     )
 
@@ -80,7 +81,7 @@ class Stats(models.Model):
         verbose_name_plural = 'статистика'
 
     def __str__(self):
-        return '{} {}/{}'.format(self.type.capitalize(), self.currency_pair.first_currency,
+        return '{} {}/{}'.format(self.get_type_display().capitalize(), self.currency_pair.first_currency,
                                  self.currency_pair.last_currency)
 
 
