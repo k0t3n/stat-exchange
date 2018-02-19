@@ -2,8 +2,6 @@
 
 from django.db import migrations, models
 
-import stats.utils
-
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -14,7 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='statsuploadevent',
             name='filename',
-            field=models.FileField(blank=True, default=None, null=True, upload_to=stats.utils.upload_to,
+            field=models.FileField(blank=True, default=None, null=True, upload_to='',
                                    verbose_name='файл'),
         ),
     ]
