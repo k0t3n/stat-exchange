@@ -6,7 +6,7 @@ import ColButton from '../components/ColButton';
 import '../styles/FileInputModal.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { checkStatus, uploadFile, clearError } from "../actions/upload";
+import { checkStatuses, uploadFile, clearError } from "../actions/upload";
 import ListOfStatuses from "../components/ListOfStatuses";
 
 class FileInputModal extends Component {
@@ -19,14 +19,18 @@ class FileInputModal extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdateStatuses = this.handleUpdateStatuses.bind(this);
+    }
+
+    componentWillMount() {
+        this.props.clearError();
     }
 
     componentDidMount() {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>');
         const { token } = this.props;
 
-        this.props.clearError();
-        this.props.checkStatus(token);
+        this.props.checkStatuses(token);
     }
 
     handleClose() {
@@ -40,13 +44,13 @@ class FileInputModal extends Component {
     handleSubmit(file) {
         const { token } = this.props;
 
-        this.props.uploadFile(file);
-        let request = setInterval(this.props.checkStatus(token), 5000);
+        this.props.uploadFile(file, token);
+    }
 
-        if (this.props.status !== 'uploading') {
-            clearInterval(request);
-            console.log('errir');
-        }
+    handleUpdateStatuses() {
+        const { token } = this.props;
+
+        this.props.checkStatuses(token);
     }
 
     render() {
@@ -70,7 +74,7 @@ class FileInputModal extends Component {
                     <Modal.Body>
                         <ListOfStatuses statuses={statuses}/>
                         <div className="FileInput">
-                            <FileInput onClick={this.handleSubmit} />
+                            <FileInput onClick={this.handleSubmit} onUpdateStatuses={this.handleUpdateStatuses} />
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
@@ -93,7 +97,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         uploadFile: bindActionCreators(uploadFile, dispatch),
-        checkStatus: bindActionCreators(checkStatus, dispatch),
+        checkStatuses: bindActionCreators(checkStatuses, dispatch),
         clearError: bindActionCreators(clearError, dispatch)
     }
 };
@@ -101,7 +105,7 @@ const mapDispatchToProps = (dispatch) => {
 FileInputModal.propTypes = {
     statuses: PropTypes.array,
     uploadFile: PropTypes.func,
-    checkStatus: PropTypes.func,
+    checkStatuses: PropTypes.func,
     error: PropTypes.bool,
     token: PropTypes.string
 };

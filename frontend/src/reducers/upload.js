@@ -1,6 +1,6 @@
 import {
     UPLOAD_REQUEST, UPLOAD_SUCCESS, UPLOAD_FAILURE,
-    SET_STATUS, CLEAR_ERROR
+    SET_STATUSES, CLEAR_ERROR
 } from "../actions/upload";
 
 const initialState = {
@@ -27,7 +27,7 @@ export default function (state = initialState, action) {
                 error: true
             });
 
-        case SET_STATUS:
+        case SET_STATUSES:
             return Object.assign({}, state, {
                 statuses: action.statuses
             });

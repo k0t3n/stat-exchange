@@ -44,7 +44,7 @@ class FileInput extends Component {
                 <Input
                     id="fileInput"
                     type="file"
-                    accept=".txt"
+                    accept=".cvs"
                     size={6}
                     offset={3}
                     onChange={(e) => this.handleChange(e.target.files[0])}
@@ -64,11 +64,19 @@ class FileInput extends Component {
                     </Col>
                 )}
                 <ColButton
+                    bsStyle="info"
+                    onClick={this.props.onUpdateStatuses}
+                    offset={2}
+                    size={4}
+                >
+                    Обновить статусы
+                </ColButton>
+
+                <ColButton
                     bsStyle="success"
                     disabled={this.validate()}
                     onClick={this.handleSubmit}
                     size={4}
-                    offset={4}
                 >
                     Загрузить файл
                 </ColButton>
@@ -78,7 +86,8 @@ class FileInput extends Component {
 }
 
 FileInput.propTypes = {
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    onUpdateStatuses: PropTypes.func
 };
 
 export default FileInput;

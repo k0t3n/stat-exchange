@@ -6,7 +6,7 @@ export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
-export const SET_STATUS = 'SET_STATUS';
+export const SET_STATUSES = 'SET_STATUSES';
 
 const loadURL = '127.0.0.1';
 const statusURL = 'http://api.stat-exchange.com/stats/getUploadEvents';
@@ -29,9 +29,9 @@ function uploadFailure() {
     }
 }
 
-function setStatus(statuses) {
+function setStatuses(statuses) {
     return {
-        type: SET_STATUS,
+        type: SET_STATUSES,
         statuses
     }
 }
@@ -42,7 +42,7 @@ export function clearError() {
     }
 }
 
-export function checkStatus(token) {
+export function checkStatuses(token) {
     return function (dispatch) {
         return fetch(statusURL, {
             method: 'GET',
@@ -53,7 +53,7 @@ export function checkStatus(token) {
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
             .then(data => {
-                dispatch(setStatus(data));
+                dispatch(setStatuses(data));
             })
             .catch(err => {
                 console.log(err);
