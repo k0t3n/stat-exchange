@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import FileInput from './FileInput';
 import PropTypes from 'prop-types';
 import ColButton from '../components/ColButton';
@@ -23,11 +23,12 @@ class FileInputModal extends Component {
     }
 
     componentWillMount() {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>');
+
         this.props.clearError();
     }
 
     componentDidMount() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>');
         const { token } = this.props;
 
         this.props.checkStatuses(token);
@@ -54,7 +55,7 @@ class FileInputModal extends Component {
     }
 
     render() {
-        const { statuses } = this.props;
+        const { statuses, error } = this.props;
         const { show } = this.state;
 
         return (
@@ -73,6 +74,11 @@ class FileInputModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <ListOfStatuses statuses={statuses}/>
+                        {error && (
+                            <Alert bsStyle="danger">
+                                Что-то пошло не так
+                            </Alert>
+                        )}
                         <div className="FileInput">
                             <FileInput onClick={this.handleSubmit} onUpdateStatuses={this.handleUpdateStatuses} />
                         </div>

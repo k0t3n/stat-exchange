@@ -41,7 +41,7 @@ class Chart extends Component {
                 gridLineColor: '#707073',
                 labels: {
                     formatter: function () {
-                        return (this.value > 0 ? ' + ' : '') + this.value + '%';
+                        return (this.value > 0 ? ' + ' : '') + this.value;
                     },
                     style: {
                         color: '#E0E0E3'
@@ -70,7 +70,7 @@ class Chart extends Component {
             },
             plotOptions: {
                 series: {
-                    compare: 'percent',
+                    compare: 'value',
                     showInNavigator: true,
                     dataLabels: {
                         color: '#B0B0B3'
@@ -107,8 +107,8 @@ class Chart extends Component {
                 }
             },
             tooltip: {
-                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-                valueDecimals: 2,
+                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change})<br/>',
+                valueDecimals: 8,
                 split: true
             },
             labels: {
@@ -147,7 +147,7 @@ class Chart extends Component {
                     text: 'All'
                 }],
                 selected: 1,
-                inputEnabled: false,
+                inputEnabled: true,
                 buttonTheme: {
                     fill: '#505053',
                     stroke: '#000000',
@@ -232,12 +232,14 @@ class Chart extends Component {
                 md={6}
                 sm={6}
             >
-                <HighChart config={config} theme={HighChart.theme} />
+                <HighChart config={config} />
             </Col>
         )
 
     }
 }
+
+// todo: Calculate timezone offset
 
 Chart.propTypes = {
     options: PropTypes.array

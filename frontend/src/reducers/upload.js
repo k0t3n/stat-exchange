@@ -24,6 +24,7 @@ export default function (state = initialState, action) {
 
         case UPLOAD_FAILURE:
             return Object.assign({}, state, {
+                isUploading: false,
                 error: true
             });
 

@@ -81,7 +81,12 @@ export function uploadFile(file) {
             })
             .catch(err => {
                 console.log(err);
-                dispatch(uploadFailure());
+                if (err.response.status === 401) {
+                    dispatch(loginUserFailure(err));
+                    dispatch(push('/auth'));
+                } else {
+                    dispatch(uploadFailure());
+                }
             })
     }
 }
