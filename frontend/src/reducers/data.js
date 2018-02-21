@@ -1,16 +1,18 @@
-import { CLEAR_DATA, FETCH_DATA_REQUEST, RECEIVE_DATA } from "../actions/data";
+import { CLEAR_DATA, FETCH_DATA_REQUEST, FETCH_DATA_FAILURE, RECEIVE_DATA } from "../actions/data";
 
 const initialState = {
     pairs: [],
     currencies: [],
-    isFetching: false
+    isFetching: false,
+    error: false
 };
 
 export default function dataReducer(state = initialState, action) {
     switch (action.type) {
         case FETCH_DATA_REQUEST:
             return Object.assign({}, state, {
-                isFetching: true
+                isFetching: true,
+                error: false
             });
 
         case RECEIVE_DATA:
@@ -25,14 +27,21 @@ export default function dataReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 pairs: action.data,
                 currencies: currencies,
-                isFetching: false
+                isFetching: false,
+                error: false
+            });
+
+        case FETCH_DATA_FAILURE:
+            return Object.assign({}, state, {
+                error: true
             });
 
         case CLEAR_DATA:
             return {
                 pairs: [],
                 currencies: [],
-                isFetching: false
+                isFetching: false,
+                error: false
             };
 
         default:

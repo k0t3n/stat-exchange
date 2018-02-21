@@ -1,6 +1,6 @@
+import { loginUserFailure } from "./auth";
 import { checkHttpStatus } from "../utils";
 import { push } from "react-router-redux";
-import { loginUserFailure } from "./auth";
 
 export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
@@ -44,6 +44,7 @@ export function clearError() {
 
 export function checkStatuses(token) {
     return function (dispatch) {
+
         return fetch(statusURL, {
             method: 'GET',
             headers: {
@@ -56,7 +57,7 @@ export function checkStatuses(token) {
                 dispatch(setStatuses(data));
             })
             .catch(err => {
-                console.log(err);
+                console.log('Statuses Error: ', err); // todo: delete this console.log
                 if (err.response.status === 401) {
                     dispatch(loginUserFailure(err));
                     dispatch(push('/auth'));
@@ -68,15 +69,14 @@ export function checkStatuses(token) {
 export function uploadFile(file) {
     return function(dispatch) {
         dispatch(uploadRequest());
-        console.log(">>>> upload request");
+        console.log(">>>> upload request"); // todo: delete this console.log
         return fetch(loadURL, {
             method: 'post',
             body: file
         })
             .then(res => checkHttpStatus(res))
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
+            .then(() => {
                 dispatch(uploadSuccess());
             })
             .catch(err => {

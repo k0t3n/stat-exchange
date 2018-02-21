@@ -1,7 +1,7 @@
+import { loginUserFailure } from "./auth";
 import { checkHttpStatus } from "../utils";
+import { push } from "react-router-redux";
 import v4 from 'uuid/v4';
-import {push} from "react-router-redux";
-import {loginUserFailure} from "./auth";
 
 export const ADD_TO_CHART_REQUEST = 'ADD_TO_CHART_REQUEST';
 export const ADD_TO_CHART_SUCCESS = 'ADD_TO_CHART_SUCCESS';
@@ -11,12 +11,12 @@ export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 
 const URL = 'http://api.stat-exchange.com/stats/getStats';
 
-function addToChartSuccess(data, firstName, lastName) {
+function addToChartSuccess(data, firstCurrencyName, lastCurrencyName) {
     return {
         type: ADD_TO_CHART_SUCCESS,
         id: v4(),
-        firstName,
-        lastName,
+        firstCurrencyName,
+        lastCurrencyName,
         data
     }
 }
@@ -72,7 +72,6 @@ export function addToChart(pair, token) {
                     dispatch(loginUserFailure(err));
                     dispatch(push('/auth'));
                 }
-                console.log(err);
             })
     }
 }

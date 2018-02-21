@@ -27,8 +27,8 @@ export default function chartReducer(state = initialState, action) {
                 ...state.pairs,
                 {
                     id: action.id,
-                    firstCurrencyName: action.firstName,
-                    lastCurrencyName: action.lastName,
+                    firstCurrencyName: action.firstCurrencyName,
+                    lastCurrencyName: action.lastCurrencyName,
                     stats: stats
                 }
             ];
@@ -51,7 +51,8 @@ export default function chartReducer(state = initialState, action) {
             ];
 
             return Object.assign({}, state, {
-                pairs: pairs
+                pairs: pairs,
+                error: false
             });
 
         case CLEAR_FROM_CHART:

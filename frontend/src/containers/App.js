@@ -7,7 +7,7 @@ import ListOfLines from './ListOfLines';
 import { fetchData } from "../actions/data";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Pagination, Col } from 'react-bootstrap';
+import { Pagination, Col, Alert } from 'react-bootstrap';
 
 class App extends Component {
     constructor() {
@@ -21,6 +21,10 @@ class App extends Component {
 
     componentWillMount() {
         this.fetchData();
+    }
+
+    componentDidMount() {
+        console.log('App mounted'); //todo: delete componentDidMount
     }
 
     fetchData() {
@@ -137,7 +141,7 @@ class App extends Component {
     render() {
         const { active } = this.state;
 
-        console.log('rendered');
+        console.log('App rendered'); // todo: delete this console.log
 
         return (
             <div>
@@ -155,6 +159,9 @@ class App extends Component {
                         {this.renderPagination()}
                     </div>
                 </Col>
+                {this.props.error && (
+                    <Alert bsStyle="danger">Что-то пошло не так, перезагрузите страницу.</Alert>
+                )}
                 {!this.props.isFetching && <PairSelect />}
                 <ListOfLines />
             </div>
@@ -167,7 +174,8 @@ const mapStateToProps = (state) => {
     return {
         pairsOnChart: state.chart.pairs,
         token: state.auth.token,
-        isFetching: state.data.isFetching
+        isFetching: state.data.isFetching,
+        error: state.data.error
     }
 };
 
