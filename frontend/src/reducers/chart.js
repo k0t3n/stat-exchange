@@ -1,4 +1,10 @@
-import { ADD_TO_CHART_REQUEST, ADD_TO_CHART_SUCCESS, ADD_TO_CHART_FAILURE, DELETE_FROM_CHART, CLEAR_FROM_CHART } from "../actions/chart";
+import {
+    ADD_TO_CHART_REQUEST,
+    ADD_TO_CHART_SUCCESS,
+    ADD_TO_CHART_FAILURE,
+    DELETE_FROM_CHART,
+    CLEAR_FROM_CHART
+} from "../actions/chart";
 import { getBy } from "../utils";
 
 const initialState = {
@@ -9,9 +15,10 @@ const initialState = {
 export default function chartReducer(state = initialState, action) {
     switch (action.type) {
         case ADD_TO_CHART_REQUEST:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 error: false
-            });
+            };
 
         case ADD_TO_CHART_SUCCESS:
             const stats = {
@@ -33,15 +40,17 @@ export default function chartReducer(state = initialState, action) {
                 }
             ];
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 pairs: newPairs,
                 error: false
-            });
+            };
 
         case ADD_TO_CHART_FAILURE:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 error: true
-            });
+            };
 
         case DELETE_FROM_CHART:
             const index = state.pairs.findIndex(pair => pair.id === action.id);
@@ -50,10 +59,11 @@ export default function chartReducer(state = initialState, action) {
                 ...state.pairs.slice(index + 1)
             ];
 
-            return Object.assign({}, state, {
-                pairs: pairs,
+            return {
+                ...state,
+                pairs,
                 error: false
-            });
+            };
 
         case CLEAR_FROM_CHART:
             return {

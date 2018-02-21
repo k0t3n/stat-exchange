@@ -12,32 +12,37 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case UPLOAD_REQUEST:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 isUploading: true,
                 error: false
-            });
+            };
 
         case UPLOAD_SUCCESS:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 isUploading: false,
                 error: false
-            });
+            };
 
         case UPLOAD_FAILURE:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 isUploading: false,
                 error: true
-            });
+            };
 
         case SET_STATUSES:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 statuses: action.statuses
-            });
+            };
 
         case CLEAR_ERROR:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 error: false
-            });
+            };
 
         default:
             return state;

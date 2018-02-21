@@ -5,49 +5,51 @@ const initialState = {
     user: null,
     isAuthenticated: false,
     isAuthenticating: false,
-    statusText: null
+    statusText: null,
+    error: false
 };
 
 export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case LOGIN_USER_REQUEST:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 isAuthenticating: true,
                 statusText: null,
                 error: false
-            });
+            };
 
         case LOGIN_USER_SUCCESS:
-            return Object.assign({}, state, {
+            return {
                 isAuthenticating: false,
                 isAuthenticated: true,
                 token: action.token,
                 user: action.user,
                 statusText: 'Successful',
                 error: false
-            });
+            };
 
         case LOGIN_USER_FAILURE:
             const statusText = action.status === 400 ? 'Неверные логин или пароль' : `Ошибка авторизации: ${action.status} ${action.statusText}`;
 
-            return Object.assign({}, state, {
+            return {
                 isAuthenticating: false,
                 isAuthenticated: false,
                 token: null,
                 user: null,
                 statusText,
                 error: true
-            });
+            };
 
         case LOGOUT_USER:
-            return Object.assign({}, state, {
+            return {
                 isAuthenticating: false,
                 isAuthenticated: false,
                 token: null,
                 user: null,
                 statusText: 'Logged out',
                 error: false
-            });
+            };
 
         default:
             return state;

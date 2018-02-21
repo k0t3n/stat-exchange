@@ -10,10 +10,11 @@ const initialState = {
 export default function dataReducer(state = initialState, action) {
     switch (action.type) {
         case FETCH_DATA_REQUEST:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 isFetching: true,
                 error: false
-            });
+            };
 
         case RECEIVE_DATA:
             function unique(array) {
@@ -24,17 +25,19 @@ export default function dataReducer(state = initialState, action) {
 
             const currencies = unique(action.data.map(pair => pair.first_currency));
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 pairs: action.data,
                 currencies: currencies,
                 isFetching: false,
                 error: false
-            });
+            };
 
         case FETCH_DATA_FAILURE:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 error: true
-            });
+            };
 
         case CLEAR_DATA:
             return {

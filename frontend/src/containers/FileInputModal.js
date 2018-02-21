@@ -23,9 +23,9 @@ class FileInputModal extends Component {
     }
 
     componentWillMount() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('File Input will mount'); // todo: delete this console.log
 
-        this.props.clearError();
+        this.props.clearError(); // todo: connect to redux FileInput, not modal
     }
 
     componentDidMount() {
