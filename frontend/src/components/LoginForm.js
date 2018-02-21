@@ -1,9 +1,9 @@
 import React from 'react';
-import { Form, Modal, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Input from './Input';
 import ColButton from "./ColButton";
+import { Form, Modal, Alert } from 'react-bootstrap';
 
 const LoginForm = ({ login, password, onChangeInput, validateForm, loginUser, error, statusText }) => {
     return (

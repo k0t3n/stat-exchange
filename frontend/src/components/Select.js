@@ -1,6 +1,7 @@
 import React from 'react';
-import { FormControl, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+
+import { FormControl, Col } from 'react-bootstrap';
 
 const Select = ({ options, value, offset = 0, ...props }) => {
     return (

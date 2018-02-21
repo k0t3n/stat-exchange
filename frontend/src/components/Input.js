@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { FormControl, FormGroup, ControlLabel, Col } from 'react-bootstrap';
 
 const Input = ({ id, label, size, offset, ...props }) => {

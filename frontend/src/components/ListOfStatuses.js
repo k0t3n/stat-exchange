@@ -1,6 +1,7 @@
 import React from 'react';
-import '../styles/ListOfStatuses.css';
 import PropTypes from 'prop-types';
+import '../styles/ListOfStatuses.css';
+
 import { ListGroup, Badge, Label, Well } from 'react-bootstrap';
 
 const ListOfStatuses =  ({ statuses, ...props }) => {

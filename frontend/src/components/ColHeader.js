@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Col } from 'react-bootstrap';
 
 const ColHeader = ({ size, offset = 0, h = 1, children, ...props }) => {

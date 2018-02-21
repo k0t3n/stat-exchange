@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+
+import { Button, Col } from 'react-bootstrap';
 
 const ColButton = ({ children, size = 1, offset = 0, ...props }) => {
     return (

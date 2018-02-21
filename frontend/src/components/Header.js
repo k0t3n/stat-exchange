@@ -1,9 +1,10 @@
 import React from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+
+import { Navbar, Button } from 'react-bootstrap';
 
 const Header = ({ redirect, isAuthenticated }) => {
     return (
