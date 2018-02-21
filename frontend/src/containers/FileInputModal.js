@@ -1,61 +1,28 @@
 import React, { Component } from 'react';
-import { Modal, Button, Alert } from 'react-bootstrap';
-import FileInput from './FileInput';
-import PropTypes from 'prop-types';
-import ColButton from '../components/ColButton';
-import '../styles/FileInputModal.css';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { checkStatuses, uploadFile, clearError } from "../actions/upload";
+import PropTypes from 'prop-types';
+import '../styles/FileInputModal.css';
+
+import { Modal, Button } from 'react-bootstrap';
 import ListOfStatuses from "../components/ListOfStatuses";
+import FileInput from './FileInput';
+import ColButton from '../components/ColButton';
 
 class FileInputModal extends Component {
-    constructor() {
-        super();
-        this.state = {
-            show: false
-        };
-
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleUpdateStatuses = this.handleUpdateStatuses.bind(this);
+    state = {
+        show: false
     }
 
-    componentWillMount() {
-        console.log('File Input will mount'); // todo: delete this console.log
-
-        this.props.clearError(); // todo: connect to redux FileInput, not modal
-    }
-
-    componentDidMount() {
-        const { token } = this.props;
-
-        this.props.checkStatuses(token);
-    }
-
-    handleClose() {
+    handleClose = () => {
         this.setState({ show: false });
     }
 
-    handleShow() {
+    handleShow = () => {
         this.setState({ show: true });
     }
 
-    handleSubmit(file) {
-        const { token } = this.props;
-
-        this.props.uploadFile(file, token);
-    }
-
-    handleUpdateStatuses() {
-        const { token } = this.props;
-
-        this.props.checkStatuses(token);
-    }
-
     render() {
-        const { statuses, error } = this.props;
+        const { statuses } = this.props;
         const { show } = this.state;
 
         return (
@@ -74,13 +41,8 @@ class FileInputModal extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <ListOfStatuses statuses={statuses}/>
-                        {error && (
-                            <Alert bsStyle="danger">
-                                Что-то пошло не так
-                            </Alert>
-                        )}
                         <div className="FileInput">
-                            <FileInput onClick={this.handleSubmit} onUpdateStatuses={this.handleUpdateStatuses} />
+                            <FileInput />
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
@@ -94,26 +56,12 @@ class FileInputModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        statuses: state.upload.statuses,
-        error: state.upload.error,
-        token: state.auth.token
-    }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        uploadFile: bindActionCreators(uploadFile, dispatch),
-        checkStatuses: bindActionCreators(checkStatuses, dispatch),
-        clearError: bindActionCreators(clearError, dispatch)
+        statuses: state.upload.statuses
     }
 };
 
 FileInputModal.propTypes = {
-    statuses: PropTypes.array,
-    uploadFile: PropTypes.func,
-    checkStatuses: PropTypes.func,
-    error: PropTypes.bool,
-    token: PropTypes.string
+    statuses: PropTypes.array
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FileInputModal);
+export default connect(mapStateToProps)(FileInputModal);

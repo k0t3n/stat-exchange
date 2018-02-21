@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import '../styles/PairSelect.css';
-import Select from "../components/Select";
-import ColButton from "../components/ColButton";
-import PropTypes from 'prop-types';
-import { Alert, Col } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addToChart } from "../actions/chart";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import '../styles/PairSelect.css';
+
+import Select from "../components/Select";
+import ColButton from "../components/ColButton";
 import ColHeader from "../components/ColHeader";
 import FileInputModal from "./FileInputModal";
+import { Alert, Col } from 'react-bootstrap';
 
 class PairSelect extends Component {
     constructor(props) {
@@ -19,11 +20,6 @@ class PairSelect extends Component {
             firstOptions: props.currencies,
             lastOptions: []
         };
-
-        this.handleChangeFirst = this.handleChangeFirst.bind(this);
-        this.handleChangeSecond = this.handleChangeSecond.bind(this);
-        this.filterOptions = this.filterOptions.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     validateBtn() {
@@ -32,13 +28,14 @@ class PairSelect extends Component {
         return (firstCurrency === 'Выберите первую валюту' || lastCurrency === 'Выберите вторую валюту');
     }
 
-    filterOptions(cr) {
+    filterOptions = (cr) => {
+        const { pairs } = this.props;
         const firstCurrency = cr;
 
-        return this.props.pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.last_currency);
+        return pairs.filter(pair => pair.first_currency === firstCurrency).map(pair => pair.last_currency);
     }
 
-    handleChangeFirst(e) {
+    handleChangeFirst = (e) => {
         const options = this.filterOptions(e.target.value); // filter by first currency
 
         this.setState({
@@ -47,21 +44,22 @@ class PairSelect extends Component {
         });
     }
 
-    handleChangeSecond(e) {
+    handleChangeSecond = (e) => {
         this.setState({
             lastCurrency: e.target.value
         })
     }
 
-    handleSubmit() {
+    handleSubmit = () => {
         const { firstCurrency, lastCurrency } = this.state;
-        const { token } = this.props;
+        const { token, addToChart } = this.props;
+
         const pair = {
             first_currency: firstCurrency,
             last_currency: lastCurrency
         };
 
-        this.props.addToChart(pair, token);
+        addToChart(pair, token);
 
         this.setState({
             firstCurrency: 'Выберите первую валюту',
@@ -69,25 +67,9 @@ class PairSelect extends Component {
         });
     }
 
-    renderError() {
-        return (
-            <Col
-                lg={4}
-                md={4}
-                sm={4}
-                lgOffset={4}
-                mdOffset={4}
-                smOffset={4}
-            >
-                <Alert bsStyle="danger">
-                    Что-то пошло не так
-                </Alert>
-            </Col>
-        )
-    }
-
     render() {
         const { firstCurrency, lastCurrency, firstOptions, lastOptions } = this.state;
+        const { error } = this.props;
 
         return (
             <Col
@@ -110,7 +92,20 @@ class PairSelect extends Component {
                     onChange={this.handleChangeSecond}
                     value={lastCurrency}
                 />
-                {this.props.error && this.renderError()}
+                {error && (
+                    <Col
+                        lg={4}
+                        md={4}
+                        sm={4}
+                        lgOffset={4}
+                        mdOffset={4}
+                        smOffset={4}
+                    >
+                        <Alert bsStyle="danger">
+                            Что-то пошло не так
+                        </Alert>
+                    </Col>
+                )}
                 <FileInputModal />
                 <ColButton
                     className="add-button"

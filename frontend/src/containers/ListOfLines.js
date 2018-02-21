@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { deleteFromChart } from "../actions/chart";
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
 import { ListGroup, ListGroupItem, Col } from 'react-bootstrap';
 import ColHeader from "../components/ColHeader";
 
 class ListOfLines extends Component {
     render() {
+        const { pairs, deleteFromChart } = this.props;
+
         return (
             <Col
                 className="ListOfPairs"
@@ -21,11 +25,11 @@ class ListOfLines extends Component {
                 </ColHeader>
                 <ListGroup>
                     {
-                        this.props.pairs.map(pair => (
+                        pairs.map(pair => (
                             <ListGroupItem
                                 className="pair"
                                 key={pair.id}
-                                onClick={() => this.props.deleteFromChart(pair.id)}
+                                onClick={() => deleteFromChart(pair.id)}
                             >
                                 {`${pair.firstCurrencyName}/${pair.lastCurrencyName}`}
                                 </ListGroupItem>
@@ -47,6 +51,11 @@ const mapDispatchToProps = (dispatch) => {
     return {
         deleteFromChart: bindActionCreators(deleteFromChart, dispatch)
     }
+};
+
+ListOfLines.propTypes = {
+    pairs: PropTypes.array,
+    deleteFromChart: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListOfLines);

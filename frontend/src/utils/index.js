@@ -40,3 +40,5 @@ export function getBy(by, array) {
         })
         .sort((a, b) => a[0] > b[0]);
 }
+
+// todo: Fully redo all Chart data sorting, selecting etc.

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { Form, Alert, Col } from 'react-bootstrap';
-import Input from '../components/Input';
-import ColButton from "../components/ColButton";
+import { checkStatuses, clearError, uploadFile } from "../actions/upload";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import PropTypes from 'prop-types';
+
+import { Form, Alert, Col } from 'react-bootstrap';
+import ColButton from "../components/ColButton";
+import Input from '../components/Input';
 
 class FileInput extends Component {
     constructor() {
@@ -13,16 +17,31 @@ class FileInput extends Component {
         };
 
         this.maxSize = 1000000;
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.validate = this.validate.bind(this);
     }
 
-    handleChange(file) {
+    componentWillMount() {
+        console.log('File Input will mount'); // todo: delete this console.log
+
+        this.props.clearError(); // todo: connect to redux FileInput, not modal
+    }
+
+    componentDidMount() {
+        const { token } = this.props;
+
+        this.props.checkStatuses(token);
+    }
+
+    handleChange = (file) => {
         this.setState({
             fileSize: file.size,
             file
         });
+    }
+
+    handleUpdateStatuses = () => {
+        const { token } = this.props;
+
+        this.props.checkStatuses(token);
     }
 
     validate() {
@@ -30,8 +49,12 @@ class FileInput extends Component {
         return (fileSize > this.maxSize || file === null);
     }
 
-    handleSubmit() {
-        this.props.onClick(this.state.file);
+    handleSubmit = () => {
+        const { token } = this.props;
+        const { file } = this.state;
+
+        this.props.uploadFile(file, token);
+
         this.setState({
             file: null,
             fileSize: 0
@@ -39,6 +62,9 @@ class FileInput extends Component {
     }
 
     render() {
+        const { error } = this.props;
+        const { fileSize } = this.state;
+
         return (
             <Form horizontal>
                 <Input
@@ -49,7 +75,7 @@ class FileInput extends Component {
                     offset={3}
                     onChange={(e) => this.handleChange(e.target.files[0])}
                 />
-                {this.state.fileSize > this.maxSize && (
+                {fileSize > this.maxSize && (
                     <Col
                         lg={8}
                         md={8}
@@ -61,11 +87,16 @@ class FileInput extends Component {
                         <Alert bsStyle="danger">
                             Файл не должен превышать 10мб
                         </Alert>
+                        {error && (
+                            <Alert bsStyle="danger">
+                                Что-то пошло не так
+                            </Alert>
+                        )}
                     </Col>
                 )}
                 <ColButton
                     bsStyle="info"
-                    onClick={this.props.onUpdateStatuses}
+                    onClick={this.handleUpdateStatuses}
                     offset={2}
                     size={4}
                 >
@@ -85,12 +116,30 @@ class FileInput extends Component {
     }
 }
 
-FileInput.propTypes = {
-    onClick: PropTypes.func,
-    onUpdateStatuses: PropTypes.func
+const mapStateToProps = (state) => {
+    return {
+        error: state.upload.error,
+        token: state.auth.token
+    }
 };
 
-export default FileInput;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        uploadFile: bindActionCreators(uploadFile, dispatch),
+        checkStatuses: bindActionCreators(checkStatuses, dispatch),
+        clearError: bindActionCreators(clearError, dispatch),
+    }
+};
+
+FileInput.propTypes = {
+    uploadFile: PropTypes.func,
+    checkStatuses: PropTypes.func,
+    clearError: PropTypes.func,
+    error: PropTypes.bool,
+    token: PropTypes.string
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileInput);
 
 //todo: style file input
 //todo[OPTIONAL]: edit login form to be managed by redux

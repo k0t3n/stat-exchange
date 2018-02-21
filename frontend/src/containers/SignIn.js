@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import '../styles/SignIn.css';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { bindActionCreators } from 'redux';
 import { loginUser } from "../actions/auth";
+import '../styles/SignIn.css';
+
 import LoginForm from "../components/LoginForm";
 
 class SignIn extends Component {
-    constructor() {
-        super();
-        this.state = {
-            login: '',
-            password: ''
-        };
-
-        this.onChangeInput = this.onChangeInput.bind(this);
-        this.validateForm = this.validateForm.bind(this);
+    state = {
+        login: '',
+        password: ''
     }
 
     componentWillMount() {
@@ -24,12 +19,12 @@ class SignIn extends Component {
         }
     }
 
-    validateForm() {
+    validateForm = () => {
         const { login, password } = this.state;
         return (login.length < 4) || (password.length < 4)
     }
 
-    onChangeInput(e) {
+    onChangeInput = (e) => {
         this.setState({
             [e.target.id]: e.target.value
         })

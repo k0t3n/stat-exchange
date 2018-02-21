@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { logoutUser } from "../actions/auth";
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 class SignOut extends Component {
     componentWillMount() {
-        this.props.logoutUser();
+        const { logoutUser } = this.props;
+
+        logoutUser();
     }
 
     render() {

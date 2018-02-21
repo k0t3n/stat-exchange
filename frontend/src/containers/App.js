@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from "redux";
+import { fetchData } from "../actions/data";
+import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import '../styles/App.css';
+
 import PairSelect from "./PairSelect";
 import Chart from "../components/Chart";
 import ListOfLines from './ListOfLines';
-import { fetchData } from "../actions/data";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
 import { Pagination, Col, Alert } from 'react-bootstrap';
 
 class App extends Component {
-    constructor() {
-        super();
-        this.state = {
-            active: 1
-        };
-
-        this.handleClick = this.handleClick.bind(this);
+    state = {
+        active: 1
     }
 
     componentWillMount() {
@@ -28,8 +24,9 @@ class App extends Component {
     }
 
     fetchData() {
-        let token = this.props.token;
-        this.props.fetchData(token);
+        const { token, fetchData } = this.props;
+
+        fetchData(token);
     }
 
     renderFirst() {
@@ -41,7 +38,6 @@ class App extends Component {
                 data: pair.stats.price
             }
         });
-        // console.log('priceOptions = ', priceOptions);
 
         const amountOptions = pairsOnChart.map(pair => {
             return {
@@ -49,7 +45,6 @@ class App extends Component {
                 data: pair.stats.amount
             }
         });
-        // console.log('amountOptions = ', amountOptions);
 
         return (
             <div>
@@ -68,7 +63,6 @@ class App extends Component {
                 data: pair.stats.total
             }
         });
-        // console.log('totalOptions = ', totalOptions);
 
         const feeOptions = pairsOnChart.map(pair => {
             return {
@@ -76,7 +70,6 @@ class App extends Component {
                 data: pair.stats.fee
             }
         });
-        // console.log('feeOptions = ', feeOptions);
 
         return (
             <div>
@@ -95,7 +88,6 @@ class App extends Component {
                 data: pair.stats.base_total_less_fee
             }
         });
-        // console.log('totalOptions = ', baseOptions);
 
         const quoteOptions = pairsOnChart.map(pair => {
             return {
@@ -103,7 +95,6 @@ class App extends Component {
                 data: pair.stats.quote_total_less_fee
             }
         });
-        // console.log('feeOptions = ', quoteOptions);
 
         return (
             <div>
@@ -114,31 +105,34 @@ class App extends Component {
     }
 
     renderPagination() {
+        const { active } = this.state;
+
         return (
             <Pagination className="Pagination">
                 <Pagination.Item
-                    active={this.state.active === 1}
+                    active={active === 1}
                     onClick={() => this.handleClick(1)}
                 >{1}</Pagination.Item>
                 <Pagination.Item
-                    active={this.state.active === 2}
+                    active={active === 2}
                     onClick={() => this.handleClick(2)}
                 >{2}</Pagination.Item>
                 <Pagination.Item
-                    active={this.state.active === 3}
+                    active={active === 3}
                     onClick={() => this.handleClick(3)}
                 >{3}</Pagination.Item>
             </Pagination>
         )
     }
 
-    handleClick(num) {
+    handleClick = (num) => {
         this.setState({
             active: num
         })
     }
 
     render() {
+        const { error, isFetching } = this.props;
         const { active } = this.state;
 
         console.log('App rendered'); // todo: delete this console.log
@@ -159,10 +153,10 @@ class App extends Component {
                         {this.renderPagination()}
                     </div>
                 </Col>
-                {this.props.error && (
+                {error && (
                     <Alert bsStyle="danger">Что-то пошло не так, перезагрузите страницу.</Alert>
                 )}
-                {!this.props.isFetching && <PairSelect />}
+                {!isFetching && <PairSelect />}
                 <ListOfLines />
             </div>
         );
