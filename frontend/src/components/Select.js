@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import { FormControl, Col } from 'react-bootstrap';
 
-const Select = ({ options, value, offset = 0, ...props }) => {
+const Select = ({ options, value, size, offset = 0, ...props }) => {
     return (
         <Col
-            lg={6}
-            md={6}
-            sm={6}
+            lg={size}
+            md={size}
+            sm={size}
             lgOffset={offset}
             mdOffset={offset}
             smOffset={offset}
@@ -29,7 +29,8 @@ const Select = ({ options, value, offset = 0, ...props }) => {
 Select.propTypes = {
     options: PropTypes.array.isRequired,
     value: PropTypes.string.isRequired,
-    offset: PropTypes.number
+    offset: PropTypes.number,
+    size: PropTypes.number.isRequired
 };
 
 export default Select;

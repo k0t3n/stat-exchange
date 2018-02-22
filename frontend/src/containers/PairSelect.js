@@ -18,8 +18,11 @@ class PairSelect extends Component {
             firstCurrency: 'Выберите первую валюту',
             lastCurrency: 'Выберите вторую валюту',
             firstOptions: props.currencies,
-            lastOptions: []
+            lastOptions: [],
+            exchange: 'bittrex'
         };
+
+        this.exchanges = ['bittrex', 'binance', 'poloniex'];
     }
 
     validateBtn() {
@@ -50,6 +53,12 @@ class PairSelect extends Component {
         })
     }
 
+    handleChangeExchange = (e) => {
+        this.setState({
+            exchange: e.target.value
+        })
+    }
+
     handleSubmit = () => {
         const { firstCurrency, lastCurrency } = this.state;
         const { token, addToChart } = this.props;
@@ -68,7 +77,7 @@ class PairSelect extends Component {
     }
 
     render() {
-        const { firstCurrency, lastCurrency, firstOptions, lastOptions } = this.state;
+        const { firstCurrency, lastCurrency, firstOptions, lastOptions, exchange } = this.state;
         const { error } = this.props;
 
         return (
@@ -86,11 +95,19 @@ class PairSelect extends Component {
                     options={['Выберите первую валюту', ...firstOptions]}
                     onChange={this.handleChangeFirst}
                     value={firstCurrency}
+                    size={5}
                 />
                 <Select
                     options={['Выберите вторую валюту', ...lastOptions]}
                     onChange={this.handleChangeSecond}
                     value={lastCurrency}
+                    size={5}
+                />
+                <Select
+                    options={this.exchanges}
+                    onChange={this.handleChangeExchange}
+                    value={exchange}
+                    size={2}
                 />
                 {error && (
                     <Col

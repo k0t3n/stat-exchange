@@ -20,6 +20,7 @@ class FileInput extends Component {
         };
 
         this.maxSize = 1000000;
+        this.exchanges = ['bittrex', 'binance', 'poloniex'];
     }
 
     componentWillMount() {
@@ -65,14 +66,14 @@ class FileInput extends Component {
 
         this.setState({
             file: null,
-            fileSize: 0
+            fileSize: 0,
+            fileName: 'Выберите файл'
         })
     }
 
     render() {
         const { error } = this.props;
         const { fileSize, fileName, activeExchange } = this.state;
-        const exchanges = ['bittrex', 'binance', 'poloniex'];
 
         return (
             <Form horizontal>
@@ -111,7 +112,7 @@ class FileInput extends Component {
                     sm={12}
                 >
                     <ButtonGroup justified className="Exchanges">
-                        {exchanges.map(exchange => (
+                        {this.exchanges.map(exchange => (
                             <ColButton
                                 onClick={() => this.handleChangeExchange(exchange)}
                                 bsStyle={exchange === activeExchange ? 'primary' : 'default'}
