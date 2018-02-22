@@ -66,12 +66,20 @@ export function checkStatuses(token) {
     }
 }
 
-export function uploadFile(file) {
+export function uploadFile(file, exchange, token) {
     return function(dispatch) {
         dispatch(uploadRequest());
         console.log(">>>> upload request"); // todo: delete this console.log
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("exchange", exchange);
+
         return fetch(loadURL, {
             method: 'post',
+            headers: {
+                'Authorization': `JWT ${token}`
+            },
             body: file
         })
             .then(res => checkHttpStatus(res))

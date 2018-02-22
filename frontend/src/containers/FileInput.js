@@ -3,17 +3,20 @@ import { checkStatuses, clearError, uploadFile } from "../actions/upload";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
+import '../styles/FileInput.css';
 
-import { Form, Alert, Col } from 'react-bootstrap';
+import { Form, Alert, Col, ButtonGroup } from 'react-bootstrap';
 import ColButton from "../components/ColButton";
-import Input from '../components/Input';
+import ColHeader from "../components/ColHeader";
 
 class FileInput extends Component {
     constructor() {
         super();
         this.state = {
             file: null,
-            fileSize: 0
+            fileSize: 0,
+            fileName: 'Выберите файл',
+            activeExchange: 'bittrex'
         };
 
         this.maxSize = 1000000;
@@ -22,7 +25,7 @@ class FileInput extends Component {
     componentWillMount() {
         console.log('File Input will mount'); // todo: delete this console.log
 
-        this.props.clearError(); // todo: connect to redux FileInput, not modal
+        this.props.clearError();
     }
 
     componentDidMount() {
@@ -31,11 +34,16 @@ class FileInput extends Component {
         this.props.checkStatuses(token);
     }
 
-    handleChange = (file) => {
+    handleChangeFile = (file) => {
         this.setState({
             fileSize: file.size,
+            fileName: file.name,
             file
         });
+    }
+
+    handleChangeExchange = (exchange) => {
+        this.setState({ activeExchange: exchange })
     }
 
     handleUpdateStatuses = () => {
@@ -51,9 +59,9 @@ class FileInput extends Component {
 
     handleSubmit = () => {
         const { token } = this.props;
-        const { file } = this.state;
+        const { file, activeExchange } = this.state;
 
-        this.props.uploadFile(file, token);
+        this.props.uploadFile(file, activeExchange, token);
 
         this.setState({
             file: null,
@@ -63,18 +71,20 @@ class FileInput extends Component {
 
     render() {
         const { error } = this.props;
-        const { fileSize } = this.state;
+        const { fileSize, fileName, activeExchange } = this.state;
+        const exchanges = ['bittrex', 'binance', 'poloniex'];
 
         return (
             <Form horizontal>
-                <Input
-                    id="fileInput"
-                    type="file"
-                    accept=".cvs"
-                    size={6}
-                    offset={3}
-                    onChange={(e) => this.handleChange(e.target.files[0])}
-                />
+                <div className="FileInputContainer">
+                    <label htmlFor="fileInput">{fileName}</label>
+                    <input
+                        id="fileInput"
+                        type="file"
+                        accept=".cvs"
+                        onChange={(e) => this.handleChangeFile(e.target.files[0])}
+                    />
+                </div>
                 {fileSize > this.maxSize && (
                     <Col
                         lg={8}
@@ -94,6 +104,26 @@ class FileInput extends Component {
                         )}
                     </Col>
                 )}
+                <ColHeader size={12} h={4}>Выберите биржу</ColHeader>
+                <Col
+                    lg={12}
+                    md={12}
+                    sm={12}
+                >
+                    <ButtonGroup justified className="Exchanges">
+                        {exchanges.map(exchange => (
+                            <ColButton
+                                onClick={() => this.handleChangeExchange(exchange)}
+                                bsStyle={exchange === activeExchange ? 'primary' : 'default'}
+                                size={4}
+                                key={exchange}
+                            >
+                                {exchange}
+                            </ColButton>
+                        ))}
+                    </ButtonGroup>
+                </Col>
+
                 <ColButton
                     bsStyle="info"
                     onClick={this.handleUpdateStatuses}

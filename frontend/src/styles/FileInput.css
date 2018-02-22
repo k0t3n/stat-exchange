@@ -1,0 +1,23 @@
+.Exchanges {
+    margin-bottom: 5%;
+    margin-top: 5px;
+}
+
+#fileInput {
+    display: none;
+}
+
+label {
+    text-align: center;
+    padding: 7px;
+    margin: 10px auto;
+    display: block;
+    width: 30%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    background: #337ab7;
+    color: #fff;
+    border-radius: 4px;
+    border: 1px solid #2e6da4;
+}

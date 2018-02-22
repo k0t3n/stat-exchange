@@ -17,7 +17,6 @@ export function loginUserRequest() {
 }
 
 export function loginUserSuccess(data) {
-    localStorage.setItem('token', data.token);
     return {
         type: LOGIN_USER_SUCCESS,
         token: data.token,
@@ -26,7 +25,6 @@ export function loginUserSuccess(data) {
 }
 
 export function loginUserFailure(err) {
-    localStorage.removeItem('token');
     return {
         type: LOGIN_USER_FAILURE,
         status: err.response.status,
@@ -70,7 +68,7 @@ export function loginUser(login, pass, redirect = '/') {
 export function logoutUser() {
     return (dispatch) => {
         dispatch(clearData());
-        dispatch(clearFromChart()); // todo: Think about this method
+        dispatch(clearFromChart());
         dispatch(logout());
         dispatch(push('/auth'));
     }
