@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -20,17 +21,30 @@ class CurrencyPair(models.Model):
         return '{}/{}'.format(self.first_currency, self.last_currency)
 
 
-class Stats(models.Model):
-    TYPES = (
+class StatsRecord(models.Model):
+    RECORD_TYPES = (
         ('buy', 'покупка'),
         ('sell', 'продажа'),
     )
 
-    type = models.CharField(
+    EXCHANGES = (
+        ('bittrex', 'BITTREX'),
+        ('binance', 'BINANCE'),
+        ('poloniex', 'POLONIEX'),
+    )
+
+    record_type = models.CharField(
         blank=True, null=True,
         max_length=5,
-        choices=TYPES,
+        choices=RECORD_TYPES,
         verbose_name='тип'
+    )
+
+    exchange = models.CharField(
+        blank=True, null=True,
+        max_length=10,
+        choices=EXCHANGES,
+        verbose_name='биржа'
     )
 
     currency_pair = models.ForeignKey(
@@ -81,8 +95,31 @@ class Stats(models.Model):
         verbose_name_plural = 'статистика'
 
     def __str__(self):
-        return '{} {}/{}'.format(self.get_type_display().capitalize(), self.currency_pair.first_currency,
+        return '{} {}/{}'.format(self.get_record_type_display().capitalize(), self.currency_pair.first_currency,
                                  self.currency_pair.last_currency)
+
+
+class TradeProfit(models.Model):
+    stats_records = models.ManyToManyField(
+        StatsRecord,
+        verbose_name='статистические записи',
+    )
+
+    profit = models.DecimalField(
+        max_digits=17, decimal_places=8,  # <1 milliard
+        verbose_name='профит'
+    )
+
+    date = models.DateField(
+        verbose_name='дата'
+    )
+
+    class Meta:
+        verbose_name = 'профит'
+        verbose_name_plural = 'профиты'
+
+    def __str__(self):
+        return 'Профит {}, количество записей {}, дата {}'.format(self.profit, len(self.stats_records), self.date)
 
 
 class StatsUploadEvent(models.Model):
@@ -93,11 +130,16 @@ class StatsUploadEvent(models.Model):
     )
     task_id = models.CharField(
         max_length=36,
-        verbose_name='ID задачи',
+        verbose_name='ID celery-задачи',
     )
     uploaded_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='время загрузки'
+    )
+    uploaded_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='загружено пользователем'
     )
     uploaded_records = models.PositiveIntegerField(
         default=0,

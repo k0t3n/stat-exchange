@@ -5,9 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
 
-from .models import Stats, StatsUploadEvent, CurrencyPair
+from .models import StatsRecord, StatsUploadEvent, CurrencyPair
 from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, GetStatsSerializer
-from .tasks import start_parse
+from .tasks import ParsePoloniexStatsTask
 from .utils import save_uploaded_file
 
 
@@ -18,18 +18,19 @@ class StatsUploadView(APIView):
 
     parser_classes = (MultiPartParser,)
 
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def put(self, request):
         if request.FILES.get('file') is None:
             raise ParseError('Нет файла в запросе!')
         file = save_uploaded_file(request.FILES['file'])
 
-        task = start_parse.delay(file)
+        task = ParsePoloniexStatsTask().delay(file)
 
         StatsUploadEvent.objects.create(
-            task_id=task,
+            task_id=task.id,
             file=file,
+            uploaded_by=request.user
         )
 
         return Response('ok', status=204)
@@ -66,15 +67,17 @@ class StatsView(generics.GenericAPIView):
 
     renderer_classes = (JSONRenderer,)
 
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
         received_data = request.data
 
+        # task = TradeProfitRecalculationTask().run('XRP', 'BTC')
+
         if received_data.get('first_currency') is None or received_data.get('last_currency') is None:
             raise ParseError('Пропущен один из параметров')
 
-        stats_objects = Stats.objects.filter(
+        stats_objects = StatsRecord.objects.filter(
             currency_pair__first_currency__icontains=received_data['first_currency'],
             currency_pair__last_currency__icontains=received_data['last_currency'],
         )

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .fields import CurrencyPairField
-from .models import StatsUploadEvent, CurrencyPair, Stats
+from .models import StatsUploadEvent, CurrencyPair, StatsRecord
 
 
 class StatsUploadEventSerializer(serializers.ModelSerializer):
@@ -20,5 +20,5 @@ class GetStatsSerializer(serializers.ModelSerializer):
     currency_pair = CurrencyPairField()
 
     class Meta:
-        model = Stats
+        model = StatsRecord
         fields = '__all__'
