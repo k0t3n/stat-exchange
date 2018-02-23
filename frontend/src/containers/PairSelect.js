@@ -78,7 +78,7 @@ class PairSelect extends Component {
 
     render() {
         const { firstCurrency, lastCurrency, firstOptions, lastOptions, exchange } = this.state;
-        const { error } = this.props;
+        const { error, isFetching } = this.props;
 
         return (
             <Col
@@ -91,24 +91,28 @@ class PairSelect extends Component {
                     size={12}
                     h={4}
                 >Добавление пары на графики</ColHeader>
-                <Select
-                    options={['Выберите первую валюту', ...firstOptions]}
-                    onChange={this.handleChangeFirst}
-                    value={firstCurrency}
-                    size={5}
-                />
-                <Select
-                    options={['Выберите вторую валюту', ...lastOptions]}
-                    onChange={this.handleChangeSecond}
-                    value={lastCurrency}
-                    size={5}
-                />
-                <Select
-                    options={this.exchanges}
-                    onChange={this.handleChangeExchange}
-                    value={exchange}
-                    size={2}
-                />
+                {!isFetching && (
+                    <div>
+                        <Select
+                            options={['Выберите первую валюту', ...firstOptions]}
+                            onChange={this.handleChangeFirst}
+                            value={firstCurrency}
+                            size={5}
+                        />
+                        <Select
+                            options={['Выберите вторую валюту', ...lastOptions]}
+                            onChange={this.handleChangeSecond}
+                            value={lastCurrency}
+                            size={5}
+                        />
+                        <Select
+                            options={this.exchanges}
+                            onChange={this.handleChangeExchange}
+                            value={exchange}
+                            size={2}
+                        />
+                    </div>
+                )}
                 {error && (
                     <Col
                         lg={4}
@@ -150,7 +154,8 @@ const mapStateToProps = (state) => {
         error: state.chart.error,
         token: state.auth.token,
         pairs: state.data.pairs,
-        currencies: state.data.currencies
+        currencies: state.data.currencies,
+        isFetching: state.data.isFetching
     }
 };
 

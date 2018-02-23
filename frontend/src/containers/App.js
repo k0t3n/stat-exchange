@@ -19,10 +19,6 @@ class App extends Component {
         this.fetchData();
     }
 
-    componentDidMount() {
-        console.log('App mounted'); //todo: delete componentDidMount
-    }
-
     fetchData() {
         const { token, fetchData } = this.props;
 
@@ -132,10 +128,8 @@ class App extends Component {
     }
 
     render() {
-        const { error, isFetching } = this.props;
+        const { error } = this.props;
         const { active } = this.state;
-
-        console.log('App rendered'); // todo: delete this console.log
 
         return (
             <div>
@@ -156,7 +150,7 @@ class App extends Component {
                 {error && (
                     <Alert bsStyle="danger">Что-то пошло не так, перезагрузите страницу.</Alert>
                 )}
-                {!isFetching && <PairSelect />}
+                <PairSelect />
                 <ListOfLines />
             </div>
         );
@@ -168,7 +162,6 @@ const mapStateToProps = (state) => {
     return {
         pairsOnChart: state.chart.pairs,
         token: state.auth.token,
-        isFetching: state.data.isFetching,
         error: state.data.error
     }
 };
@@ -182,7 +175,6 @@ const mapDispatchToProps = (dispatch) => {
 App.propTypes = {
     pairsOnChart: PropTypes.array,
     token: PropTypes.string,
-    isFetching: PropTypes.bool,
     fetchData: PropTypes.func
 };
 

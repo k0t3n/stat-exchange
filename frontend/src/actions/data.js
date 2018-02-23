@@ -37,7 +37,7 @@ export function clearData() {
 export function fetchData(token) {
     return function(dispatch) {
         dispatch(fetchDataRequest());
-        console.log('>>>> fetch data'); //todo: delete this console.log
+
         return fetch(URL, {
             headers: {
                 'Authorization': `JWT ${token}`
