@@ -15,54 +15,67 @@ class ParsePoloniexStatsTask(Task):
     ignore_result = False
     stock_exchange = 'poloniex'
 
-    def run(self, path_to_file, *args, **kwargs):
-        with open(path_to_file, 'r') as file_obj:
+    def run(self, *args, **kwargs):
+        task_id = kwargs.get('task_id')
+        file = kwargs.get('file')
+        upload_event = StatsUploadEvent.objects.get(parse_task_id=task_id)
+
+        with open(file, 'r') as file_obj:
             file_data = csv.DictReader(file_obj, delimiter=',')
 
-            data = []
+            unique_currency_pairs = []
+            items_created = 0
 
             for item in file_data:
-                data.append(
-                    StatsRecord(
-                        record_type=item['Type'].lower(),
-                        exchange=self.stock_exchange,
-                        currency_pair=CurrencyPair.objects.get_or_create(
-                            first_currency=item['Market'].split('/')[0],
-                            last_currency=item['Market'].split('/')[1],
-                        )[0],  # because get_or_create() returns tuple
-                        datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
-                        price=float(item['Price']),
-                        amount=float(item['Amount']),
-                        total=float(item['Total']),
-                        fee=float(item['Fee'][:-1]),  # remove %
-                        order=int(item['Order Number']),
-                        base_total_less_fee=float(item['Base Total Less Fee']),
-                        quote_total_less_fee=float(item['Quote Total Less Fee'])
-                    )
+                currency_pair = CurrencyPair.objects.get_or_create(
+                    first_currency=item['Market'].split('/')[0],
+                    last_currency=item['Market'].split('/')[1],
+                )[0]
+
+                stats, created = StatsRecord.objects.update_or_create(
+                    record_type=item['Type'].lower(),
+                    currency_pair=currency_pair,
+                    datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
+                    price=float(item['Price']),
+                    amount=float(item['Amount']),
+                    total=float(item['Total']),
+                    fee=float(item['Fee'][:-1]),  # remove %
+                    order=int(item['Order Number']),
+                    base_total_less_fee=float(item['Base Total Less Fee']),
+                    quote_total_less_fee=float(item['Quote Total Less Fee']),
+                    defaults={
+                        'upload_event': upload_event
+                    }
                 )
 
-            stats = StatsRecord.objects.bulk_create(data)
-            print(stats)
+                if created:
+                    items_created += 1
+
+                unique_currency_pairs.append('{}/{}'.format(currency_pair.first_currency, currency_pair.last_currency))
 
         result = {
-            'uploaded_records': len(data)
+            'uploaded_records': items_created,
+            'unique_currency_pairs': list(set(unique_currency_pairs)),
         }
 
         return result
 
     def on_success(self, retval, task_id, *args, **kwargs):
+        print(task_id)
         task_celery = AsyncResult(task_id)
-        result = task_celery.result
+        uploaded_records = task_celery.result['uploaded_records']
 
-        stats_task = StatsUploadEvent.objects.get(task_id=task_id)
+        stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
         stats_task.status = 'success'
-        stats_task.uploaded_records = int(result['uploaded_records'])
+        stats_task.uploaded_records = int(uploaded_records)
         stats_task.save()
 
         return
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        stats_task = StatsUploadEvent.objects.get(task_id=task_id)
+        print('_________________________________')
+        print(task_id)
+        stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
         stats_task.status = 'failed'
         stats_task.save()
 
@@ -97,58 +110,66 @@ class ParseBinanceStatsTask(Task):
 
 class TradeProfitRecalculationTask(Task):
 
-    def run(self, first_currency, last_currency, *args, **kwargs):
+    def run(self, result, *args, **kwargs):
 
-        stats = StatsRecord.objects.filter(
-            currency_pair__first_currency=first_currency,
-            currency_pair__last_currency=last_currency,
-        ).order_by('datetime')
+        unique_currency_pairs = result['unique_currency_pairs']
+        task_id = kwargs.get('task_id')
+        user = StatsUploadEvent.objects.get(
+            update_profit_task_id=task_id,
+        ).uploaded_by
 
-        first_stat = True  # первый раз ли проходит цикл
-        is_previous_sell = False  # была ли предыдущая запись продажей
-        previous_date = None  # предыдущая дата
+        for pair in unique_currency_pairs:
 
-        trade_profit = 0  # профит текущей сделки
+            currency_pair = CurrencyPair.objects.get(
+                first_currency=pair.split('/')[0],
+                last_currency=pair.split('/')[1],
+            )
 
-        trade_stats = []
+            stats = StatsRecord.objects.filter(
+                currency_pair=currency_pair,
+                upload_event__uploaded_by=user,
+            ).order_by('datetime')
 
-        for stat in stats:
-            trade_stats.append(stat)
+            first_stat = True  # первый раз ли проходит цикл
+            is_previous_sell = False  # была ли предыдущая запись продажей
+            previous_date = None  # предыдущая дата
 
-            if first_stat:  # если только начало
-                if stat.type == 'buy':
-                    trade_profit -= stat.total
-                    first_stat = False
+            trade_profit = 0  # профит текущей сделки
 
-                elif stat.type == 'sell':  # первая запись не может быть продажей
-                    print('Первая запись на продажу - пропускаю')
+            stats_records = []
 
-            else:  # если не начало
+            for stat in stats:
+                stats_records.append(stat)
 
-                if is_previous_sell:  # если предыдущее было продажей
-                    if stat.type == 'buy':  # и если текущее покупкой
+                if first_stat:  # если только начало
+                    if stat.record_type == 'buy':
+                        trade_profit -= stat.total
+                        first_stat = False
 
-                        self._create_or_update_trade_profit(previous_date, trade_profit, trade_stats)
+                    elif stat.record_type == 'sell':  # первая запись не может быть продажей
+                        print('Первая запись на продажу - пропускаю')
 
-                        print('__________________________')
-                        trade_stats = []
-                        trade_profit = 0 - stat.total  # обнуляем и записываем профит новой операции
-                        is_previous_sell = False  # возвращаем в исходное значение
+                else:  # если не начало
+                    if is_previous_sell:  # если предыдущее было продажей
+                        if stat.record_type == 'buy':  # и если текущее покупкой
+                            self._create_or_update_trade_profit(currency_pair, user, previous_date, trade_profit,
+                                                                stats_records)  # создаем или обновляем профит
 
-                    elif stat.type == 'sell':  # если у нас ещё одна продажа
-                        trade_profit += stat.total
+                            stats_records[:] = []  # обнуляем id записей этой сделки
+                            trade_profit = 0 - stat.total  # обнуляем и записываем профит новой операции
+                            is_previous_sell = False  # возвращаем в исходное значение
 
-                else:  # если предыдущая была покупкой
-                    if stat.type == 'buy':  # и если текущее покупкой
-                        trade_profit -= stat.total  # то записываем профит общей сделки
+                        elif stat.record_type == 'sell':  # если у нас ещё одна продажа
+                            trade_profit += stat.total
 
-                    elif stat.type == 'sell':  # если текущая продажей
-                        trade_profit += stat.total  # то записываем профит общей сделки
-                        previous_date = stat.datetime.date()  # и записываем последнюю дату
-                        is_previous_sell = True  # ставим, что предыдущее было продажей
+                    else:  # если предыдущая была покупкой
+                        if stat.record_type == 'buy':  # и если текущее покупкой
+                            trade_profit -= stat.total  # то записываем профит общей сделки
 
-            print(stat.type, stat.currency_pair, stat.total, stat.datetime)
-            print(trade_profit)
+                        elif stat.record_type == 'sell':  # если текущая продажей
+                            trade_profit += stat.total  # то записываем профит общей сделки
+                            previous_date = stat.datetime.date()  # и записываем последнюю дату
+                            is_previous_sell = True  # ставим, что предыдущее было продажей
 
         return
 
@@ -158,12 +179,15 @@ class TradeProfitRecalculationTask(Task):
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         return
 
-    def _create_or_update_trade_profit(self, date, profit, stats_records):
-        trade_profit, created = TradeProfit.objects.get_or_create(date=date)
-        if not created:
-            trade_profit.profit += profit
+    def _create_or_update_trade_profit(self, currency_pair, user, date, profit, stats_records):
+        trade_profit, created = TradeProfit.objects.get_or_create(
+            date=date,
+            owner=user,
+            currency_pair=currency_pair
+        )
 
-            for stats_record in stats_records:
-                trade_profit.stats_records.add(stats_record)
+        trade_profit.profit = profit
+        trade_profit.stats_records.add(*stats_records)
+        trade_profit.save()
 
-            trade_profit.save()
+        return
