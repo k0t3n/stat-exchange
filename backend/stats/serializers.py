@@ -33,3 +33,14 @@ class Top10TradesCountSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrencyPair
         fields = ('first_currency', 'last_currency', 'trades_count')
+
+
+class Top10TradesProfitSerializer(serializers.ModelSerializer):
+    trades_profit = serializers.SerializerMethodField()
+
+    def get_trades_profit(self, obj):
+        return obj.trades_profit
+
+    class Meta:
+        model = CurrencyPair
+        fields = ('first_currency', 'last_currency', 'trades_profit')
