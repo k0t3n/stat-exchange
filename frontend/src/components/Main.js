@@ -6,7 +6,7 @@ import Header from './Header';
 import App from '../containers/App';
 import SignIn from '../containers/SignIn';
 import SignOut from '../containers/SignOut';
-
+import NotFound from './NotFound';
 
 const Main = () => {
     return (
@@ -16,6 +16,7 @@ const Main = () => {
                 <Route exact path={"/"} component={privateComponent(App)} />
                 <Route path={"/auth"} component={SignIn} />
                 <Route path={"/logout"} component={privateComponent(SignOut)} />
+                <Route component={NotFound} />
             </Switch>
         </div>
     )

@@ -34,7 +34,7 @@ class Chart extends Component {
     }
 
     componentDidMount() {
-        console.log('asdfg');
+        console.log('Chart mounted'); //todo: Request to needed exchange
     }
 
     handleClick = (name) => {
@@ -44,7 +44,7 @@ class Chart extends Component {
     }
 
     render() {
-        console.log('rereer');
+        console.log('Chart rendered');
         const { options, title } = this.props;
         const config = createChartConfig(options, title);
 
