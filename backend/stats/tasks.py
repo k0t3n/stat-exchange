@@ -32,7 +32,7 @@ class ParsePoloniexStatsTask(Task):
                     last_currency=item['Market'].split('/')[1],
                 )[0]
 
-                stats, created = StatsRecord.objects.update_or_create(
+                stats, created = StatsRecord.objects.get_or_create(
                     record_type=item['Type'].lower(),
                     currency_pair=currency_pair,
                     datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
