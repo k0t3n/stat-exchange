@@ -6,9 +6,13 @@ import { Col } from 'react-bootstrap';
 import HighChart from 'react-highcharts/ReactHighstock.src';
 
 const Chart = ({ options, title }) => {
-    const newOptions = options.map(pair => pair.stats);
+    const newOptions = [...options].map(option => {
+        return {
+            name: option.stats.name,
+            data: option.stats.data
+        }
+    }).filter(a => a.data.length > 1);
     const config = createChartConfig(newOptions, title);
-    // console.log(options);
 
     return (
         <Col

@@ -82,12 +82,6 @@ export function createChartConfig(options, title) {
                     color: '#A0A0A3'
                 }
             },
-            plotOptions: {
-                series: {
-                    compare: 'percent',
-                    showInNavigator: true
-                }
-            },
             plotLines: [{
                 value: 0,
                 width: 2,
@@ -135,6 +129,7 @@ export function createChartConfig(options, title) {
         tooltip: {
             pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change})<br/>',
             valueDecimals: 8,
+            changeDecimals: 8,
             split: true
         },
         labels: {
