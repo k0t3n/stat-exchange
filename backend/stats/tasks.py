@@ -35,7 +35,7 @@ class ParsePoloniexStatsTask(Task):
                 stats, created = StatsRecord.objects.get_or_create(
                     record_type=item['Type'].lower(),
                     currency_pair=currency_pair,
-                    datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
+                    datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S"),
                     price=float(item['Price']),
                     amount=float(item['Amount']),
                     total=float(item['Total']),
