@@ -42,7 +42,8 @@ export default function diagramReducer(state = initialState, action) {
 
         case CLEAR_DIAGRAM:
             return {
-                data: [],
+                trades: [],
+                profits: [],
                 error: false
             };
 

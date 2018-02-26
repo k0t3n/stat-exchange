@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from "redux";
+import { getTop10Profits, getTop10Trades } from "../actions/diagram";
+import { connect } from "react-redux";
 
 import { Tabs, Tab, Col } from 'react-bootstrap';
 import Chart from "./Chart";
 import Diagram from "./Diagram";
-import {bindActionCreators} from "redux";
-import {getTop10Profits, getTop10Trades} from "../actions/diagram";
-import {connect} from "react-redux";
 
 class ChartsTabs extends Component {
     state = {
@@ -74,8 +74,7 @@ const mapStateToProps = (state) => {
         profits: state.diagram.profits.map(option => ({
             name: `${option.first_currency}/${option.last_currency}`,
             y: option.trades_profit
-        })),
-
+        }))
     }
 };
 
