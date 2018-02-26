@@ -266,17 +266,36 @@ export function createChartConfig(options, title) {
 
 export function createDiagramConfig(data, title, name) {
     return {
+        colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+            '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
         chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
+            type: 'pie',
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                stops: [
+                    [0, '#2a2a2b'],
+                    [1, '#3e3e40']
+                ]
+            },
+            style: {
+                fontFamily: '\'Unica One\', sans-serif'
+            },
+            plotBorderColor: '#606063'
         },
         title: {
-            text: title
+            text: title,
+            style: {
+                color: '#E0E0E3',
+                textTransform: 'uppercase',
+                fontSize: '20px'
+            }
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.y}</b>'
+            pointFormat: '{series.name}: <b>{point.y}</b>',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            style: {
+                color: '#F0F0F0'
+            }
         },
         plotOptions: {
             pie: {
@@ -289,6 +308,52 @@ export function createDiagramConfig(data, title, name) {
                         color: 'black'
                     }
                 }
+            },
+            series: {
+                dataLabels: {
+                    color: '#B0B0B3'
+                },
+                marker: {
+                    lineColor: '#333'
+                }
+            },
+            boxplot: {
+                fillColor: '#505053'
+            },
+            candlestick: {
+                lineColor: 'white'
+            },
+            errorbar: {
+                color: 'white'
+            }
+        },
+        legend: {
+            itemStyle: {
+                color: '#E0E0E3'
+            },
+            itemHoverStyle: {
+                color: '#FFF'
+            },
+            itemHiddenStyle: {
+                color: '#606063'
+            }
+        },
+        credits: {
+            style: {
+                color: '#666'
+            }
+        },
+        labels: {
+            style: {
+                color: '#707073'
+            }
+        },
+        drilldown: {
+            activeAxisLabelStyle: {
+                color: '#F0F0F3'
+            },
+            activeDataLabelStyle: {
+                color: '#F0F0F3'
             }
         },
         series: [{
