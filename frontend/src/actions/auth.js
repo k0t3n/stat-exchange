@@ -2,6 +2,7 @@ import { checkHttpStatus } from "../utils";
 import { clearFromChart } from "./chart";
 import { clearData } from "./data";
 import { push } from 'react-router-redux';
+import { clearDiagram } from "./diagram";
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
@@ -69,6 +70,7 @@ export function logoutUser() {
     return (dispatch) => {
         dispatch(clearData());
         dispatch(clearFromChart());
+        dispatch(clearDiagram());
         dispatch(logout());
         dispatch(push('/auth'));
     }

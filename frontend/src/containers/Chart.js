@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import '../styles/Chart.css';
 
-import { Col, Pagination } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import HighChart from 'react-highcharts/ReactHighstock.src';
 import {createChartConfig} from "../utils";
+import ChartPagination from "../components/ChartPagination";
 
 class Chart extends Component {
     state = {
@@ -24,17 +24,12 @@ class Chart extends Component {
         const exchanges = ['bittrex', 'binance', 'poloniex'];
 
         return (
-            <div className="Pagination">
-                <Pagination>
-                    {exchanges.map(exchange => (
-                        <Pagination.Item
-                            key={exchange}
-                            active={exchange === active}
-                            onClick={() => this.handleClick(exchange)}
-                        >{exchange}</Pagination.Item>
-                    ))}
-                </Pagination>
-            </div>
+            <ChartPagination
+                className="Pagination"
+                active={active}
+                options={exchanges}
+                onClick={this.handleClick}
+            />
         )
     }
 
