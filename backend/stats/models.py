@@ -45,7 +45,7 @@ class StatsRecord(models.Model):
         on_delete=models.CASCADE
     )
 
-    datetime = models.DateTimeField(
+    date = models.DateField(
         verbose_name='дата/время'
     )
 

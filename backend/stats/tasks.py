@@ -35,7 +35,7 @@ class ParsePoloniexStatsTask(Task):
                 stats, created = StatsRecord.objects.get_or_create(
                     record_type=item['Type'].lower(),
                     currency_pair=currency_pair,
-                    datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
+                    date=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S").date(),
                     price=float(item['Price']),
                     amount=float(item['Amount']),
                     total=float(item['Total']),
@@ -128,7 +128,7 @@ class TradeProfitRecalculationTask(Task):
             stats = StatsRecord.objects.filter(
                 currency_pair=currency_pair,
                 upload_event__uploaded_by=user,
-            ).order_by('datetime')
+            ).order_by('date')
 
             first_stat = True  # первый раз ли проходит цикл
             is_previous_sell = False  # была ли предыдущая запись продажей
@@ -168,7 +168,7 @@ class TradeProfitRecalculationTask(Task):
 
                         elif stat.record_type == 'sell':  # если текущая продажей
                             trade_profit += stat.total  # то записываем профит общей сделки
-                            previous_date = stat.datetime.date()  # и записываем последнюю дату
+                            previous_date = stat.date  # и записываем последнюю дату
                             is_previous_sell = True  # ставим, что предыдущее было продажей
 
         return

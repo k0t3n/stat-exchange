@@ -14,6 +14,7 @@ idna==2.6
 kombu==4.1.0
 oauthlib==2.0.6
 PyJWT==1.5.3
+python-telegram-handler==2.0.2
 python3-openid==3.1.0
 pytz==2018.3
 redis==2.10.6
