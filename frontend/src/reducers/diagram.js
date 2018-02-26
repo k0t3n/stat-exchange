@@ -1,24 +1,36 @@
-import { TOP10_REQUEST, TOP10_SUCCESS, TOP10_FAILURE, CLEAR_DIAGRAM } from "../actions/diagram";
+import { TOP10_TRADES_REQUEST, TOP10_PROFITS_REQUEST, TOP10_TRADES_SUCCESS, TOP10_PROFITS_SUCCESS, TOP10_FAILURE, CLEAR_DIAGRAM } from "../actions/diagram";
 
 const initialState = {
-    data: [],
-    typeOfTop: 'trades',
+    trades: [],
+    profits: [],
     error: false
 };
 
 export default function diagramReducer(state = initialState, action) {
     switch (action.type) {
-        case TOP10_REQUEST:
+        case TOP10_TRADES_REQUEST:
             return {
                 ...state,
-                typeOfTop: action.typeOfTop,
                 error: false
             };
 
-        case TOP10_SUCCESS:
+        case TOP10_PROFITS_REQUEST:
             return {
                 ...state,
-                data: action.data,
+                error: false
+            };
+
+        case TOP10_TRADES_SUCCESS:
+            return {
+                ...state,
+                trades: action.data,
+                error: false
+            };
+
+        case TOP10_PROFITS_SUCCESS:
+            return {
+                ...state,
+                profits: action.data,
                 error: false
             };
 
@@ -31,7 +43,6 @@ export default function diagramReducer(state = initialState, action) {
         case CLEAR_DIAGRAM:
             return {
                 data: [],
-                typeOfTop: 'trades',
                 error: false
             };
 

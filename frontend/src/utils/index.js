@@ -264,7 +264,7 @@ export function createChartConfig(options, title) {
     };
 }
 
-export function createDiagramConfig(data, title) {
+export function createDiagramConfig(data, title, name) {
     return {
         chart: {
             plotBackgroundColor: null,
@@ -276,7 +276,7 @@ export function createDiagramConfig(data, title) {
             text: title
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>{point.y}</b>'
         },
         plotOptions: {
             pie: {
@@ -292,29 +292,9 @@ export function createDiagramConfig(data, title) {
             }
         },
         series: [{
-            name: 'Brands',
+            name: name,
             colorByPoint: true,
-            data: [{
-                name: 'IE',
-                y: 56.33
-            }, {
-                name: 'Chrome',
-                y: 24.03,
-                sliced: true,
-                selected: true
-            }, {
-                name: 'Firefox',
-                y: 10.38
-            }, {
-                name: 'Safari',
-                y: 4.77
-            }, {
-                name: 'Opera',
-                y: 0.91
-            }, {
-                name: 'Other',
-                y: 0.2
-            }]
+            data: data
         }]
     }
 }

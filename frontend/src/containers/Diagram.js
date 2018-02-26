@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
-import Hichchart from 'react-highcharts/ReactHighcharts.src';
 import { createDiagramConfig } from "../utils";
+
+import Hichchart from 'react-highcharts/ReactHighcharts.src';
 import { Col } from 'react-bootstrap';
 
 class Diagram extends Component {
     componentDidMount() {
         console.log("diagram mounted");
-        // const { getTop10, typeOfTop, token } = this.props;
-        //
-        // getTop10(typeOfTop, token);
     }
 
     render() {
-        const { title } = this.props;
+        const { title, options, name } = this.props;
         console.log('Diagram rendered');
-        const config = createDiagramConfig(undefined, title);
-
+        const config = createDiagramConfig(options, title, name);
         return (
             <Col
                 lg={6}
