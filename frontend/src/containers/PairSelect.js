@@ -52,12 +52,12 @@ class PairSelect extends Component {
             lastCurrency: e.target.value
         })
     }
-
-    handleChangeExchange = (e) => {
-        this.setState({
-            exchange: e.target.value
-        })
-    }
+    //
+    // handleChangeExchange = (e) => {
+    //     this.setState({
+    //         exchange: e.target.value
+    //     })
+    // }
 
     handleSubmit = () => {
         const { firstCurrency, lastCurrency } = this.state;
@@ -77,8 +77,8 @@ class PairSelect extends Component {
     }
 
     render() {
-        const { firstCurrency, lastCurrency, firstOptions, lastOptions, exchange } = this.state;
-        const { error, isFetching } = this.props;
+        const { firstCurrency, lastCurrency, firstOptions, lastOptions } = this.state;
+        const { error } = this.props;
 
         return (
             <Col
@@ -91,36 +91,31 @@ class PairSelect extends Component {
                     size={12}
                     h={4}
                 >Добавление пары на графики</ColHeader>
-                {!isFetching && (
-                    <div>
-                        <Select
-                            options={['Выберите первую валюту', ...firstOptions]}
-                            onChange={this.handleChangeFirst}
-                            value={firstCurrency}
-                            size={5}
-                        />
-                        <Select
-                            options={['Выберите вторую валюту', ...lastOptions]}
-                            onChange={this.handleChangeSecond}
-                            value={lastCurrency}
-                            size={5}
-                        />
-                        <Select
-                            options={this.exchanges}
-                            onChange={this.handleChangeExchange}
-                            value={exchange}
-                            size={2}
-                        />
-                    </div>
-                )}
+                <div>
+                    <Select
+                        options={['Выберите первую валюту', ...firstOptions]}
+                        onChange={this.handleChangeFirst}
+                        value={firstCurrency}
+                        size={6}
+                    />
+                    <Select
+                        options={['Выберите вторую валюту', ...lastOptions]}
+                        onChange={this.handleChangeSecond}
+                        value={lastCurrency}
+                        size={6}
+                    />
+                    {/*<Select*/}
+                        {/*options={this.exchanges}*/}
+                        {/*onChange={this.handleChangeExchange}*/}
+                        {/*value={exchange}*/}
+                        {/*size={2}*/}
+                    {/*/>*/}
+                </div>
                 {error && (
                     <Col
-                        lg={4}
-                        md={4}
-                        sm={4}
-                        lgOffset={4}
-                        mdOffset={4}
-                        smOffset={4}
+                        lg={12}
+                        md={12}
+                        sm={12}
                     >
                         <Alert bsStyle="danger">
                             Что-то пошло не так
@@ -154,8 +149,7 @@ const mapStateToProps = (state) => {
         error: state.chart.error,
         token: state.auth.token,
         pairs: state.data.pairs,
-        currencies: state.data.currencies,
-        isFetching: state.data.isFetching
+        currencies: state.data.currencies
     }
 };
 

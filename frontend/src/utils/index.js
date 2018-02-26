@@ -30,17 +30,6 @@ export function saveState(state) {
     }
 }
 
-export function getBy(by, array) {
-    return array
-        .map(obj => {
-            let date = new Date(obj.datetime).getTime();
-            let data = parseFloat(obj[by]);
-
-            return [date, data];
-        })
-        .sort((a, b) => a[0] > b[0]);
-}
-
 export function createChartConfig(options, title) {
     return {
         colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',

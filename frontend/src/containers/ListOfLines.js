@@ -9,7 +9,7 @@ import ColHeader from "../components/ColHeader";
 
 class ListOfLines extends Component {
     render() {
-        const { pairs, deleteFromChart } = this.props;
+        const { pairsOnChart, deleteFromChart } = this.props;
 
         return (
             <Col
@@ -25,13 +25,13 @@ class ListOfLines extends Component {
                 </ColHeader>
                 <ListGroup>
                     {
-                        pairs.map(pair => (
+                        pairsOnChart.map(pair => (
                             <ListGroupItem
                                 className="pair"
                                 key={pair.id}
                                 onClick={() => deleteFromChart(pair.id)}
                             >
-                                {`${pair.firstCurrencyName}/${pair.lastCurrencyName}`}
+                                {pair.stats.name}
                                 </ListGroupItem>
                         ))
                     }
@@ -43,7 +43,7 @@ class ListOfLines extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        pairs: state.chart.pairs
+        pairsOnChart: state.chart.pairsOnChart
     }
 };
 

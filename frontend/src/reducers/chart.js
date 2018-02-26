@@ -5,10 +5,9 @@ import {
     DELETE_FROM_CHART,
     CLEAR_FROM_CHART
 } from "../actions/chart";
-import { getBy } from "../utils";
 
 const initialState = {
-    pairs: [],
+    pairsOnChart: [],
     error: false
 };
 
@@ -21,28 +20,17 @@ export default function chartReducer(state = initialState, action) {
             };
 
         case ADD_TO_CHART_SUCCESS:
-            const stats = {
-                price: getBy("price", action.data),
-                amount: getBy("amount", action.data),
-                total: getBy("total", action.data),
-                fee: getBy("fee", action.data),
-                base_total_less_fee: getBy("base_total_less_fee", action.data),
-                quote_total_less_fee: getBy("quote_total_less_fee", action.data)
-            };
-
             const newPairs = [
-                ...state.pairs,
+                ...state.pairsOnChart,
                 {
                     id: action.id,
-                    firstCurrencyName: action.firstCurrencyName,
-                    lastCurrencyName: action.lastCurrencyName,
-                    stats: stats
+                    stats: action.pair
                 }
             ];
 
             return {
                 ...state,
-                pairs: newPairs,
+                pairsOnChart: newPairs,
                 error: false
             };
 
@@ -53,21 +41,21 @@ export default function chartReducer(state = initialState, action) {
             };
 
         case DELETE_FROM_CHART:
-            const index = state.pairs.findIndex(pair => pair.id === action.id);
-            const pairs = [
-                ...state.pairs.slice(0, index),
-                ...state.pairs.slice(index + 1)
+            const index = state.pairsOnChart.findIndex(pair => pair.id === action.id);
+            const pairsOnChart = [
+                ...state.pairsOnChart.slice(0, index),
+                ...state.pairsOnChart.slice(index + 1)
             ];
 
             return {
                 ...state,
-                pairs,
+                pairsOnChart,
                 error: false
             };
 
         case CLEAR_FROM_CHART:
             return {
-                pairs: [],
+                pairsOnChart: [],
                 error: false
             };
 

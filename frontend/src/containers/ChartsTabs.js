@@ -4,7 +4,7 @@ import { getTop10Profits, getTop10Trades } from "../actions/diagram";
 import { connect } from "react-redux";
 
 import { Tabs, Tab, Col } from 'react-bootstrap';
-import Chart from "./Chart";
+import Chart from "./ChartContainer";
 import Diagram from "./Diagram";
 
 class ChartsTabs extends Component {
@@ -25,7 +25,7 @@ class ChartsTabs extends Component {
 
     render() {
         const { active } = this.state;
-        const { trades, profits } = this.props;
+        const { trades, profits, options } = this.props;
 
         return (
             <Col
@@ -43,7 +43,7 @@ class ChartsTabs extends Component {
                     <Tab eventKey={2} title={'Диаграммы'}>
                     </Tab>
                 </Tabs>
-                {active === 1 ? <Chart/> : (
+                {active === 1 ? <Chart options={options} /> : (
                     <div>
                         <Diagram
                             type="trades"
@@ -74,7 +74,8 @@ const mapStateToProps = (state) => {
         profits: state.diagram.profits.map(option => ({
             name: `${option.first_currency}/${option.last_currency}`,
             y: option.trades_profit
-        }))
+        })),
+        options: state.chart.pairsOnChart
     }
 };
 
