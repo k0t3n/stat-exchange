@@ -36,7 +36,8 @@ class StatsRecord(models.Model):
 
     currency_pair = models.ForeignKey(
         CurrencyPair,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='stats'
     )
 
     upload_event = models.ForeignKey(
@@ -173,7 +174,8 @@ class TradeProfit(models.Model):
 
     currency_pair = models.ForeignKey(
         CurrencyPair,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='trade_profit'
     )
 
     profit = models.DecimalField(

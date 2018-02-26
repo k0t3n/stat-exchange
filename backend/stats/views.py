@@ -1,5 +1,6 @@
 from celery import chain
 from celery import uuid
+from django.db.models import Count
 from rest_framework import generics
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import MultiPartParser
@@ -7,8 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
 
-from .models import StatsRecord, StatsUploadEvent, CurrencyPair
-from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, GetStatsSerializer
+from .models import StatsUploadEvent, CurrencyPair, TradeProfit
+from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, TradeProfitSerializer, \
+    Top10TradesCountSerializer
 from .tasks import ParsePoloniexStatsTask, TradeProfitRecalculationTask
 from .utils import save_uploaded_file
 
@@ -98,26 +100,56 @@ class CurrencyPairsView(generics.ListAPIView):
     serializer_class = CurrencyPairSerializer
 
 
-class StatsView(generics.GenericAPIView):
+class TradeProfitView(generics.GenericAPIView):
     """
-    Вывод статистики по заданным параметрам
+    Вывод профита по определенной паре
     """
 
     renderer_classes = (JSONRenderer,)
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         received_data = request.data
+        user = request.user
 
-        if received_data.get('first_currency') is None or received_data.get('last_currency') is None:
+        first_currency = received_data.get('first_currency')
+        last_currency = received_data.get('last_currency')
+
+        if first_currency is None or last_currency is None:
             raise ParseError('Пропущен один из параметров')
 
-        stats_objects = StatsRecord.objects.filter(
-            currency_pair__first_currency__icontains=received_data['first_currency'],
-            currency_pair__last_currency__icontains=received_data['last_currency'],
+        profit = TradeProfit.objects.filter(
+            owner=user,
+            currency_pair__first_currency=first_currency,
+            currency_pair__last_currency=last_currency,
         )
 
-        response = GetStatsSerializer(stats_objects, many=True).data
+        response = TradeProfitSerializer(profit, many=True).data
+
+        return Response(response)
+
+
+class Top10TradesCount(generics.GenericAPIView):
+    """
+    Топ 10 пар по профиту
+    """
+
+    renderer_classes = (JSONRenderer,)
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+
+        queryset = CurrencyPair.objects.annotate(
+            num_tradeprofit=Count('trade_profit')
+        ).filter(
+            trade_profit__owner=user
+        ).order_by(
+            '-num_tradeprofit'
+        )[:10]
+
+        response = Top10TradesCountSerializer(queryset, many=True).data
 
         return Response(response)
