@@ -36,8 +36,10 @@ class ParsePoloniexStatsTask(Task):
                 try:
                     StatsRecord.objects.select_related('currency_pair'). \
                         get(**{'record_type': item['Type'].lower(),
-                               'currency_pair': currency_pair})
-                except StatsRecord.DoesNotExist:
+                               'currency_pair': currency_pair,
+                               'datetime': datetime.strptime(item['Date'], '%Y-%m-%d %H:%M:%S'),
+                               })
+                except (StatsRecord.DoesNotExist, StatsRecord.MultipleObjectsReturned):
                     created = StatsRecord.objects.create(
                         record_type=item['Type'].lower(),
                         currency_pair=currency_pair,
@@ -46,6 +48,7 @@ class ParsePoloniexStatsTask(Task):
                         upload_event=upload_event,
                         amount=float(item['Amount']),
                         total=float(item['Total']),
+                        fee=float(item['Fee'].strip('%')),
                         order=int(item['Order Number']),
                         base_total_less_fee=float(item['Base Total Less Fee']),
                         quote_total_less_fee=float(item['Quote Total Less Fee'])
