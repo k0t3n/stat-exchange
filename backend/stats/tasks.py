@@ -17,14 +17,15 @@ class ParsePoloniexStatsTask(Task):
 
     def run(self, *args, **kwargs):
         task_id = kwargs.get('task_id')
-        file = kwargs.get('file')
+        csv_file_upload = kwargs.get('file')
         upload_event = StatsUploadEvent.objects.get(parse_task_id=task_id)
 
-        with open(file, 'r') as file_obj:
+        with open(csv_file_upload, 'r') as file_obj:
             file_data = csv.DictReader(file_obj, delimiter=',')
 
-            unique_currency_pairs = []
+            created = None
             items_created = 0
+            unique_currency_pairs = []
 
             for item in file_data:
                 currency_pair = CurrencyPair.objects.get_or_create(
@@ -32,21 +33,24 @@ class ParsePoloniexStatsTask(Task):
                     last_currency=item['Market'].split('/')[1],
                 )[0]
 
-                stats, created = StatsRecord.objects.get_or_create(
-                    record_type=item['Type'].lower(),
-                    currency_pair=currency_pair,
-                    datetime=datetime.strptime(item['Date'], "%Y-%m-%d %H:%M:%S"),
-                    price=float(item['Price']),
-                    amount=float(item['Amount']),
-                    total=float(item['Total']),
-                    fee=float(item['Fee'][:-1]),  # remove %
-                    order=int(item['Order Number']),
-                    base_total_less_fee=float(item['Base Total Less Fee']),
-                    quote_total_less_fee=float(item['Quote Total Less Fee']),
-                    defaults={
-                        'upload_event': upload_event
-                    }
-                )
+                try:
+                    StatsRecord.objects.select_related('currency_pair'). \
+                        get(**{'record_type': item['Type'].lower(),
+                               'currency_pair': currency_pair})
+                except StatsRecord.DoesNotExist:
+                    created = StatsRecord.objects.create(
+                        record_type=item['Type'].lower(),
+                        currency_pair=currency_pair,
+                        datetime=datetime.strptime(item['Date'], '%Y-%m-%d %H:%M:%S'),
+                        price=float(item['Price']),
+                        upload_event=upload_event,
+                        amount=float(item['Amount']),
+                        total=float(item['Total']),
+                        fee=float(item['Fee'][:-1]),  # remove %
+                        order=int(item['Order Number']),
+                        base_total_less_fee=float(item['Base Total Less Fee']),
+                        quote_total_less_fee=float(item['Quote Total Less Fee'])
+                    )
 
                 if created:
                     items_created += 1
