@@ -46,7 +46,6 @@ class ParsePoloniexStatsTask(Task):
                         upload_event=upload_event,
                         amount=float(item['Amount']),
                         total=float(item['Total']),
-                        fee=float(item['Fee'][:-1]),  # remove %
                         order=int(item['Order Number']),
                         base_total_less_fee=float(item['Base Total Less Fee']),
                         quote_total_less_fee=float(item['Quote Total Less Fee'])
