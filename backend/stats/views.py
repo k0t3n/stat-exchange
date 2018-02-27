@@ -26,10 +26,11 @@ class StatsUploadView(APIView):
 
     def put(self, request):
         received_data = request.data
-        if request.FILES.get('file') is None or received_data.get('exchange') is None:
+        if received_data.get('file', None) or \
+                received_data.get('exchange', None):
             raise ParseError('Пропущен один из параметров!')
 
-        file = save_uploaded_file(request.FILES['file'])
+        file = save_uploaded_file(received_data['file'])
         request_exchange = received_data['exchange'].lower()
 
         exchanges = [item[0] for item in StatsUploadEvent.EXCHANGES]
@@ -102,7 +103,7 @@ class StatsUploadView(APIView):
             #     )
             # ).apply_async()
 
-        return Response('ok', status=204)
+        return Response({'status': True}, status=204)
 
 
 class StatsUploadEventView(generics.ListAPIView):
