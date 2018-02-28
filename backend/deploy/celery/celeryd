@@ -1,4 +1,4 @@
-CELERY_BIN="/tmp/stat-exchange/backend/venv/bin/celery"
+CELERY_BIN="/opt/stat-exchange/backend/venv/bin/celery"
 
 # App instance to use
 CELERY_APP="core"
