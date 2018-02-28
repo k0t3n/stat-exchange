@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
 import Main from './components/Main';
-import registerServiceWorker from './registerServiceWorker';
 
 import { loginUserSuccess } from "./actions/auth";
 import { Provider } from 'react-redux';
