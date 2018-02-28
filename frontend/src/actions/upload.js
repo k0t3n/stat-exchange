@@ -8,7 +8,7 @@ export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const SET_STATUSES = 'SET_STATUSES';
 
-const loadURL = '127.0.0.1';
+const uploadURL = 'http://api.stat-exchange.com/stats/upload';
 const statusURL = 'http://api.stat-exchange.com/stats/getUploadEvents';
 
 function uploadRequest() {
@@ -75,20 +75,18 @@ export function uploadFile(file, exchange, token) {
         formData.append("file", file);
         formData.append("exchange", exchange);
 
-        return fetch(loadURL, {
-            method: 'post',
+        return fetch(uploadURL, {
+            method: 'put',
             headers: {
                 'Authorization': `JWT ${token}`
             },
-            body: file
+            body: formData
         })
             .then(res => checkHttpStatus(res))
-            .then(res => res.json())
             .then(() => {
                 dispatch(uploadSuccess());
             })
             .catch(err => {
-                console.log(err);
                 if (err.response.status === 401) {
                     dispatch(loginUserFailure(err));
                     dispatch(push('/auth'));
