@@ -7,6 +7,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
+from rest_framework_csv.renderers import CSVRenderer
 
 from .models import StatsUploadEvent, CurrencyPair, TradeProfit
 from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, TradeProfitSerializer, \
@@ -20,17 +21,17 @@ class StatsUploadView(APIView):
     Загрузка файла и запуск парсинга + обновления профита
     """
 
-    parser_classes = (MultiPartParser,)
+    parser_classes = (MultiPartParser, CSVRenderer)
 
     permission_classes = (IsAuthenticated,)
 
     def put(self, request):
         received_data = request.data
-        if received_data.get('file', None) or \
-                received_data.get('exchange', None):
+
+        if request.FILES.get('file') is None or received_data.get('exchange') is None:
             raise ParseError('Пропущен один из параметров!')
 
-        file = save_uploaded_file(received_data['file'])
+        file = save_uploaded_file(request.FILES['file'])
         request_exchange = received_data['exchange'].lower()
 
         exchanges = [item[0] for item in StatsUploadEvent.EXCHANGES]
@@ -103,7 +104,7 @@ class StatsUploadView(APIView):
             #     )
             # ).apply_async()
 
-        return Response({'status': True}, status=204)
+        return Response('ok', status=204)
 
 
 class StatsUploadEventView(generics.ListAPIView):
@@ -113,7 +114,7 @@ class StatsUploadEventView(generics.ListAPIView):
 
     permission_classes = (IsAuthenticated,)
 
-    queryset = StatsUploadEvent.objects.all()[:10]
+    queryset = StatsUploadEvent.objects.order_by('-uploaded_at')[:3]
 
     serializer_class = StatsUploadEventSerializer
 
