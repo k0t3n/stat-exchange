@@ -30,9 +30,9 @@ class FileInput extends Component {
     }
 
     componentDidMount() {
-        const { token } = this.props;
+        const { token, checkStatuses } = this.props;
 
-        this.props.checkStatuses(token);
+        checkStatuses(token);
     }
 
     handleChangeFile = (file) => {
@@ -59,7 +59,7 @@ class FileInput extends Component {
     }
 
     handleSubmit = () => {
-        const { token } = this.props;
+        const { token, checkStatuses } = this.props;
         const { file, activeExchange } = this.state;
 
         this.props.uploadFile(file, activeExchange, token);
@@ -68,7 +68,9 @@ class FileInput extends Component {
             file: null,
             fileSize: 0,
             fileName: 'Выберите файл'
-        })
+        });
+
+        setTimeout(() => checkStatuses(token), 5000);
     }
 
     render() {
