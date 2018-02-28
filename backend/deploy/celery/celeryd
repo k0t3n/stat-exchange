@@ -4,14 +4,14 @@ CELERY_BIN="/home/k0t3n/stat-exchange/backend/venv/bin/celery"
 CELERY_APP="core"
 
 # Where to chdir at start.
-CELERYD_CHDIR="/tmp/stat-exchange/backend/"
+CELERYD_CHDIR="/home/k0t3n/stat-exchange/backend/"
 
 # Extra command-line arguments to the worker
 CELERYD_OPTS="--time-limit=300 --concurrency=8"
 
 # %n will be replaced with the first part of the nodename.
-CELERYD_LOG_FILE="/tmp/stat-exchange/backend/logs/%n%I.log"
-CELERYD_PID_FILE="/tmp/stat-exchange/backend/%n.pid"
+CELERYD_LOG_FILE="/home/k0t3n/stat-exchange/backend/logs/%n%I.log"
+CELERYD_PID_FILE="/home/k0t3n/stat-exchange/backend/%n.pid"
 
 # Workers should run as an unprivileged user.
 #   You need to create this user manually (or you can choose
