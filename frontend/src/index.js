@@ -12,7 +12,7 @@ import { createStore, applyMiddleware } from "redux";
 import { saveState, loadState } from "./utils";
 import ReduxThunk from 'redux-thunk';
 import reducer from './reducers';
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
 
 const history = createHistory();
 
@@ -26,9 +26,10 @@ const persistedState = loadState();
 const store = createStore(
     reducer,
     persistedState,
-    composeWithDevTools(
-        applyMiddleware(...middleware)
-    )
+    // composeWithDevTools(
+    //     applyMiddleware(...middleware)
+    // )
+    applyMiddleware(...middleware)
 );
 
 store.subscribe(() => {

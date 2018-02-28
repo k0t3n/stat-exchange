@@ -24,8 +24,6 @@ class FileInput extends Component {
     }
 
     componentWillMount() {
-        console.log('File Input will mount'); // todo: delete this console.log
-
         this.props.clearError();
     }
 
@@ -84,7 +82,7 @@ class FileInput extends Component {
                     <input
                         id="fileInput"
                         type="file"
-    accept = ".csv"
+                        accept=".csv"
                         onChange={(e) => this.handleChangeFile(e.target.files[0])}
                     />
                 </div>
