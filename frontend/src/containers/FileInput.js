@@ -34,11 +34,15 @@ class FileInput extends Component {
     }
 
     handleChangeFile = (file) => {
-        this.setState({
-            fileSize: file.size,
-            fileName: file.name,
-            file
-        });
+        try {
+            this.setState({
+                fileSize: file.size,
+                fileName: file.name,
+                file
+            });
+        } catch (err) {
+            console.log(file);
+        }
     }
 
     handleChangeExchange = (exchange) => {
@@ -59,7 +63,7 @@ class FileInput extends Component {
     handleSubmit = () => {
         const { token, checkStatuses } = this.props;
         const { file, activeExchange } = this.state;
-
+        console.log(file);
         this.props.uploadFile(file, activeExchange, token);
 
         this.setState({
@@ -81,6 +85,7 @@ class FileInput extends Component {
                     <label htmlFor="fileInput">{fileName}</label>
                     <input
                         id="fileInput"
+                        value=""
                         type="file"
                         accept=".csv"
                         onChange={(e) => this.handleChangeFile(e.target.files[0])}
