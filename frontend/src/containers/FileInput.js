@@ -82,7 +82,7 @@ class FileInput extends Component {
                     <input
                         id="fileInput"
                         type="file"
-                        accept=".cvs"
+    accept = ".csv"
                         onChange={(e) => this.handleChangeFile(e.target.files[0])}
                     />
                 </div>
