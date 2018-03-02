@@ -93,10 +93,10 @@ class StatsRecord(models.Model):
 
 
 class StatsUploadEvent(models.Model):
-    STATUSES = (
+    TASK_STATUSES = (
         ('in_progress', 'выполняется'),
-        ('success', 'выполнена'),
-        ('failed', 'ошибка'),
+        ('error', 'ошибка'),
+        ('success', 'успешно'),
     )
 
     EXCHANGES = (
@@ -110,6 +110,20 @@ class StatsUploadEvent(models.Model):
         max_length=10,
         choices=EXCHANGES,
         verbose_name='биржа'
+    )
+
+    parse_status = models.CharField(
+        max_length=15,
+        choices=TASK_STATUSES,
+        default='in_progress',
+        verbose_name='статус парсинга'
+    )
+
+    update_profit_status = models.CharField(
+        max_length=15,
+        choices=TASK_STATUSES,
+        default='in_progress',
+        verbose_name='статус обновления профитов'
     )
 
     parse_task_id = models.CharField(
@@ -138,13 +152,6 @@ class StatsUploadEvent(models.Model):
         verbose_name='загружено записей'
     )
 
-    status = models.CharField(
-        max_length=15,
-        choices=STATUSES,
-        default='in_progress',
-        verbose_name='статус'
-    )
-
     file = models.FilePathField(
         recursive=True,
         allow_folders=True, allow_files=True,
@@ -157,7 +164,7 @@ class StatsUploadEvent(models.Model):
         verbose_name_plural = 'загрузка статистики'
 
     def __str__(self):
-        return 'Status: {}, uploaded: {}'.format(self.status, self.uploaded_records)
+        return 'Status: {}, uploaded: {}'.format(self.update_profit_status, self.uploaded_records)
 
 
 class TradeProfit(models.Model):

@@ -7,7 +7,7 @@ from .models import StatsUploadEvent, CurrencyPair, TradeProfit
 class StatsUploadEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = StatsUploadEvent
-        fields = ('id', 'uploaded_at', 'uploaded_records', 'status')
+        fields = ('id', 'uploaded_at', 'exchange', 'parse_status', 'update_profit_status', 'uploaded_records')
 
 
 class CurrencyPairSerializer(serializers.ModelSerializer):

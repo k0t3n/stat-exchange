@@ -67,22 +67,20 @@ class ParsePoloniexStatsTask(Task):
         return result
 
     def on_success(self, retval, task_id, *args, **kwargs):
-        print(task_id)
         task_celery = AsyncResult(task_id)
         uploaded_records = task_celery.result['uploaded_records']
 
         stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
-        stats_task.status = 'success'
+        stats_task.parse_status = 'success'
         stats_task.uploaded_records = int(uploaded_records)
         stats_task.save()
 
         return
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        print('_________________________________')
-        print(task_id)
         stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
-        stats_task.status = 'failed'
+        stats_task.parse_status = 'error'
+        stats_task.update_profit_status = 'error'
         stats_task.save()
 
         return
@@ -180,10 +178,18 @@ class TradeProfitRecalculationTask(Task):
         return
 
     def on_success(self, retval, task_id, *args, **kwargs):
-        return
+        task_celery = AsyncResult(task_id)
+
+        stats_task = StatsUploadEvent.objects.get(update_profit_task_id=task_id)
+        stats_task.update_profit_status = 'success'
+        stats_task.save()
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        return
+        task_celery = AsyncResult(task_id)
+
+        stats_task = StatsUploadEvent.objects.get(update_profit_task_id=task_id)
+        stats_task.update_profit_status = 'error'
+        stats_task.save()
 
     def _create_or_update_trade_profit(self, currency_pair, user, date, profit, stats_records):
         trade_profit, created = TradeProfit.objects.get_or_create(
