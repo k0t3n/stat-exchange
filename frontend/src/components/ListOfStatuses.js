@@ -21,14 +21,14 @@ const ListOfStatuses =  ({ statuses, ...props }) => {
                             <ProgressBar>
                                 <ProgressBar
                                     striped
-                                    active={task.status === 'in_progress'}
+                                    active={newTask.uploadStatus === 25}
                                     now={newTask.uploadStatus}
                                     bsStyle={newTask.uploadBsStyle}
                                     label={'Загрузка файла'}
                                 />
                                 <ProgressBar
                                     striped
-                                    active={task.status === 'in_progress'}
+                                    active={newTask.parseStatus === 25}
                                     now={newTask.parseStatus}
                                     bsStyle={newTask.parseBsStyle}
                                     label={'Парсинг файла'}

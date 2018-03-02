@@ -1,4 +1,4 @@
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, entryPoint } from "../utils";
 import { clearFromChart } from "./chart";
 import { clearData } from "./data";
 import { push } from 'react-router-redux';
@@ -9,7 +9,7 @@ export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
-const URL = 'http://api.stat-exchange.com/accounts/login/';
+const URL = `${entryPoint}/accounts/login/`;
 
 export function loginUserRequest() {
     return {

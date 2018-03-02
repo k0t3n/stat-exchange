@@ -1,5 +1,5 @@
 import { loginUserFailure } from "./auth";
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, entryPoint } from "../utils";
 import { push } from "react-router-redux";
 
 export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
@@ -8,8 +8,8 @@ export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const SET_STATUSES = 'SET_STATUSES';
 
-const uploadURL = 'http://api.stat-exchange.com/stats/upload';
-const statusURL = 'http://api.stat-exchange.com/stats/getUploadEvents';
+const uploadURL = `${entryPoint}/stats/upload`;
+const statusURL = `${entryPoint}/stats/getUploadEvents`;
 
 function uploadRequest() {
     return {

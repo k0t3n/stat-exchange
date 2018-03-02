@@ -1,5 +1,5 @@
 import { loginUserFailure } from "./auth";
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, entryPoint } from "../utils";
 import { push } from "react-router-redux";
 import v4 from 'uuid/v4';
 
@@ -9,7 +9,7 @@ export const ADD_TO_CHART_FAILURE = 'ADD_TO_CHART_FAILURE';
 export const DELETE_FROM_CHART = 'DELETE_FROM_CHART';
 export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 
-const URL = 'http://api.stat-exchange.com/stats/getTradeProfit';
+const URL = `${entryPoint}/stats/getTradeProfit`;
 
 function addToChartSuccess(data, firstCurrencyName, lastCurrencyName) {
     const stats = {

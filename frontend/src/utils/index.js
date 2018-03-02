@@ -362,4 +362,4 @@ export function updateTask(task) {
     }
 }
 
-// todo: Fully redo all Chart data sorting, selecting etc.
+export const entryPoint = 'http://api.stat-exchange.com';

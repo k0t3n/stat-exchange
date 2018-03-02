@@ -1,5 +1,5 @@
 import { loginUserFailure } from "./auth";
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, entryPoint } from "../utils";
 import { push } from "react-router-redux";
 
 export const TOP10_TRADES_REQUEST = 'TOP10_TRADES_REQUEST';
@@ -9,8 +9,8 @@ export const TOP10_PROFITS_SUCCESS = 'TOP10_PROFITS_SUCCESS';
 export const TOP10_FAILURE = 'TOP10_FAILURE';
 export const CLEAR_DIAGRAM = 'CLEAR_DIAGRAM';
 
-const tradesURL = 'http://api.stat-exchange.com/stats/getTop10TradesCount';
-const profitsURL = 'http://api.stat-exchange.com/stats/getTop10TradesProfit';
+const tradesURL = `${entryPoint}/stats/getTop10TradesCount`;
+const profitsURL = `${entryPoint}/stats/getTop10TradesProfit`;
 
 function top10TradesRequest() {
     return {

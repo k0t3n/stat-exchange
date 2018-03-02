@@ -1,5 +1,5 @@
 import { loginUserFailure } from "./auth";
-import { checkHttpStatus } from "../utils";
+import { checkHttpStatus, entryPoint } from "../utils";
 import { push } from 'react-router-redux';
 
 export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
@@ -7,7 +7,7 @@ export const FETCH_DATA_FAILURE = 'FETCH_DATA_FAILURE';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
 export const CLEAR_DATA = 'CLEAR_DATA';
 
-const URL = 'http://api.stat-exchange.com/stats/getCurrencyPairs';
+const URL = `${entryPoint}/stats/getCurrencyPairs`;
 
 export function fetchDataRequest() {
     return {
