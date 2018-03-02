@@ -348,4 +348,18 @@ export function createDiagramConfig(data, title, name) {
     }
 }
 
+export function updateTask(task) {
+    const uploadStatus = task.update_profit_status === 'in_progress' ? 25 : 50;
+    const parseStatus = task.parse_status === 'in_progress' ? 25 : 50;
+    const uploadBsStyle = task.update_profit_status === 'in_progress' ? 'waning' : task.update_profit_status === 'success' ? 'success' : 'danger';
+    const parseBsStyle = task.parse_status === 'in_progress' ? 'waning' : task.parse_status === 'success' ? 'success' : 'danger';
+
+    return {
+        uploadStatus,
+        parseStatus,
+        uploadBsStyle,
+        parseBsStyle
+    }
+}
+
 // todo: Fully redo all Chart data sorting, selecting etc.
