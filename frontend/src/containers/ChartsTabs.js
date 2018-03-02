@@ -54,7 +54,7 @@ class ChartsTabs extends Component {
                         <Diagram
                             type="profits"
                             title="Топ по сумме профита"
-                            name="Обищй профит"
+                            name="Общий профит"
                             options={profits}
                         />
                     </div>
