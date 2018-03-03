@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { checkStatuses, clearError, uploadFile } from "../actions/upload";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {checkStatuses, clearError, uploadFile} from "../actions/upload";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 import '../styles/FileInput.css';
 
-import { Form, Alert, Col, ButtonGroup } from 'react-bootstrap';
+import {Alert, ButtonGroup, Col, Form} from 'react-bootstrap';
 import ColButton from "../components/ColButton";
 import ColHeader from "../components/ColHeader";
 
@@ -87,7 +87,7 @@ class FileInput extends Component {
                         id="fileInput"
                         value=""
                         type="file"
-                        accept=".csv"
+                        accept=".csv, .xls"
                         onChange={(e) => this.handleChangeFile(e.target.files[0])}
                     />
                 </div>
