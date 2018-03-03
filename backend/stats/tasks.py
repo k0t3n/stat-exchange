@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 
+import xlrd
 from celery.result import AsyncResult
 from celery.task import Task
 
@@ -9,7 +10,7 @@ from .models import StatsUploadEvent, StatsRecord, CurrencyPair, TradeProfit
 
 class ParsePoloniexStatsTask(Task):
     """
-    Парсим файл с историей биржи Polonix
+    Парсим файл с историей биржи Poloniex
     """
 
     ignore_result = False
@@ -48,10 +49,7 @@ class ParsePoloniexStatsTask(Task):
                         upload_event=upload_event,
                         amount=float(item['Amount']),
                         total=float(item['Total']),
-                        fee=float(item['Fee'].strip('%')),
-                        order=int(item['Order Number']),
-                        base_total_less_fee=float(item['Base Total Less Fee']),
-                        quote_total_less_fee=float(item['Quote Total Less Fee'])
+                        fee=(float(item['Amount']) / 100) * float(item['Fee'].strip('%')),
                     )
 
                 if created:
@@ -99,17 +97,101 @@ class ParseBittrexStatsTask(Task):
         return
 
 
-# TODO
 class ParseBinanceStatsTask(Task):
+    ignore_result = False
+    stock_exchange = 'binance'
 
     def run(self, *args, **kwargs):
-        return
+        task_id = kwargs.get('task_id')
+        uploaded_file = kwargs.get('file')
+        upload_event = StatsUploadEvent.objects.get(parse_task_id=task_id)
+
+        created = None
+        items_created = 0
+        unique_currency_pairs = []
+
+        sheet = xlrd.open_workbook(uploaded_file).sheet_by_index(0)  # берем первый лист
+
+        for rx in range(1, sheet.nrows):
+            record = sheet.row(rx)
+
+            date = datetime.strptime(record[0].value, '%Y-%m-%d %H:%M:%S')
+            market = record[1].value
+            record_type = record[2].value.lower()
+            price = float(record[3].value)
+            amount = float(record[4].value)
+            total = float(record[5].value)
+            fee = (amount / 100) * float(record[6].value)
+            fee_coin = record[7].value
+
+            currency_pair = self._get_currency_pair(market, fee_coin)
+
+            currency_pair = CurrencyPair.objects.get_or_create(
+                first_currency=currency_pair['first_currency'],
+                last_currency=currency_pair['last_currency'],
+            )[0]
+
+            try:
+                StatsRecord.objects.select_related('currency_pair'). \
+                    get(**{'record_type': record_type,
+                           'currency_pair': currency_pair,
+                           'datetime': date,
+                           })
+            except (StatsRecord.DoesNotExist, StatsRecord.MultipleObjectsReturned):
+                created = StatsRecord.objects.create(
+                    record_type=record_type,
+                    currency_pair=currency_pair,
+                    datetime=date,
+                    price=price,
+                    upload_event=upload_event,
+                    amount=amount,
+                    total=total,
+                    fee=fee,
+                )
+
+            if created:
+                items_created += 1
+
+            unique_currency_pairs.append('{}/{}'.format(currency_pair.first_currency, currency_pair.last_currency))
+
+        result = {
+            'uploaded_records': items_created,
+            'unique_currency_pairs': list(set(unique_currency_pairs)),
+        }
+
+        return result
 
     def on_success(self, retval, task_id, *args, **kwargs):
-        return
+        task_celery = AsyncResult(task_id)
+        uploaded_records = task_celery.result['uploaded_records']
+
+        stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
+        stats_task.parse_status = 'success'
+        stats_task.uploaded_records = int(uploaded_records)
+        stats_task.save()
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        return
+        stats_task = StatsUploadEvent.objects.get(parse_task_id=task_id)
+        stats_task.parse_status = 'error'
+        stats_task.update_profit_status = 'error'
+        stats_task.save()
+
+    def _get_currency_pair(self, market, fee_coin):
+        """
+        Из-за проебов разраба, который писал функцию экспорта в excel-файл и забыл
+        :param market:
+        :param fee_coin:
+        :return:
+        """
+
+        first_currency = market.replace(fee_coin, '')
+        last_currency = fee_coin
+
+        if market[:len(first_currency)] != first_currency:
+            first_currency = fee_coin
+            last_currency = market.replace(fee_coin, '')
+
+        return {'first_currency': first_currency, 'last_currency': last_currency}
 
 
 class TradeProfitRecalculationTask(Task):
@@ -118,9 +200,9 @@ class TradeProfitRecalculationTask(Task):
 
         unique_currency_pairs = result['unique_currency_pairs']
         task_id = kwargs.get('task_id')
-        user = StatsUploadEvent.objects.get(
+        upload_event = StatsUploadEvent.objects.get(
             update_profit_task_id=task_id,
-        ).uploaded_by
+        )
 
         for pair in unique_currency_pairs:
 
@@ -131,7 +213,7 @@ class TradeProfitRecalculationTask(Task):
 
             stats = StatsRecord.objects.filter(
                 currency_pair=currency_pair,
-                upload_event__uploaded_by=user,
+                upload_event=upload_event,
             ).order_by('datetime')
 
             first_stat = True  # первый раз ли проходит цикл
@@ -156,7 +238,8 @@ class TradeProfitRecalculationTask(Task):
                 else:  # если не начало
                     if is_previous_sell:  # если предыдущее было продажей
                         if stat.record_type == 'buy':  # и если текущее покупкой
-                            self._create_or_update_trade_profit(currency_pair, user, previous_date, trade_profit,
+                            self._create_or_update_trade_profit(currency_pair, upload_event, previous_date,
+                                                                trade_profit,
                                                                 stats_records)  # создаем или обновляем профит
 
                             stats_records[:] = []  # обнуляем id записей этой сделки
@@ -191,10 +274,10 @@ class TradeProfitRecalculationTask(Task):
         stats_task.update_profit_status = 'error'
         stats_task.save()
 
-    def _create_or_update_trade_profit(self, currency_pair, user, date, profit, stats_records):
+    def _create_or_update_trade_profit(self, currency_pair, upload_event, date, profit, stats_records):
         trade_profit, created = TradeProfit.objects.get_or_create(
             date=date,
-            owner=user,
+            owner=upload_event.uploaded_by,
             currency_pair=currency_pair
         )
 

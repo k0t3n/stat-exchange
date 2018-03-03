@@ -7,12 +7,11 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView, Response
-from rest_framework_csv.renderers import CSVRenderer
 
 from .models import StatsUploadEvent, CurrencyPair, TradeProfit
 from .serializers import StatsUploadEventSerializer, CurrencyPairSerializer, TradeProfitSerializer, \
     Top10TradesCountSerializer, Top10TradesProfitSerializer
-from .tasks import ParsePoloniexStatsTask, TradeProfitRecalculationTask
+from .tasks import ParsePoloniexStatsTask, ParseBinanceStatsTask, TradeProfitRecalculationTask
 from .utils import save_uploaded_file
 
 
@@ -21,14 +20,14 @@ class StatsUploadView(APIView):
     Загрузка файла и запуск парсинга + обновления профита
     """
 
-    parser_classes = (MultiPartParser, CSVRenderer)
+    parser_classes = (MultiPartParser,)
 
     permission_classes = (IsAuthenticated,)
 
     def put(self, request):
         received_data = request.data
 
-        if request.FILES.get('file') is None or received_data.get('exchange') is None:
+        if received_data.get('file') is None or received_data.get('exchange') is None:
             raise ParseError('Пропущен один из параметров!')
 
         file = save_uploaded_file(request.FILES['file'])
@@ -86,23 +85,23 @@ class StatsUploadView(APIView):
             # ).apply_async()
 
         elif request_exchange == 'binance':
-            raise ParseError('Парсер Binance в разработке!')
+            # raise ParseError('Парсер Binance в разработке!')
 
-            # task = chain(
-            #     ParseBinanceStatsTask().subtask(
-            #         kwargs={
-            #             'file': file,
-            #             'task_id': parse_task_id,
-            #         },
-            #         task_id=parse_task_id,
-            #     ),
-            #     TradeProfitRecalculationTask().subtask(
-            #         kwargs={
-            #             'task_id': update_profit_task_id,
-            #         },
-            #         task_id=update_profit_task_id,
-            #     )
-            # ).apply_async()
+            task = chain(
+                ParseBinanceStatsTask().subtask(
+                    kwargs={
+                        'file': file,
+                        'task_id': parse_task_id,
+                    },
+                    task_id=parse_task_id,
+                ),
+                TradeProfitRecalculationTask().subtask(
+                    kwargs={
+                        'task_id': update_profit_task_id,
+                    },
+                    task_id=update_profit_task_id,
+                )
+            ).apply_async()
 
         return Response('ok', status=204)
 
