@@ -29,8 +29,6 @@ class ChartContainer extends Component {
 
 }
 
-// todo: Calculate timezone offset
-
 Chart.propTypes = {
     options: PropTypes.array,
     title: PropTypes.string

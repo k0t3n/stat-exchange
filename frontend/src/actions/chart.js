@@ -12,12 +12,14 @@ export const CLEAR_FROM_CHART = 'CLEAR_FROM_CHART';
 const URL = `${entryPoint}/stats/getTradeProfit`;
 
 function addToChartSuccess(data, firstCurrencyName, lastCurrencyName) {
+    const newData = data.map(pair => ([
+        new Date(pair.date).getTime(),
+        parseFloat(pair.profit)
+    ]));
+
     const stats = {
         name: `${firstCurrencyName}/${lastCurrencyName}`,
-        data: data.map(pair => ([
-            new Date(pair.date).getTime(),
-            parseFloat(pair.profit)
-        ])).sort((a, b) => a > b)
+        data: newData
     };
 
     return {
